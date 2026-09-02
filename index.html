@@ -567,14 +567,6 @@
     position:absolute;inset:0;z-index:4;pointer-events:none;
     background:radial-gradient(100% 100% at 50% 45%, transparent 55%, rgba(8,6,3,.55) 100%);
   }
-  /* pointer light - follows the cursor with a smooth trail */
-  .rp-glow{
-    position:absolute;left:0;top:0;width:220px;height:220px;border-radius:50%;z-index:5;pointer-events:none;opacity:0;
-    background:radial-gradient(circle, rgba(227,201,138,.5), rgba(227,201,138,.16) 45%, transparent 72%);
-    mix-blend-mode:screen;transform:translate(-50%,-50%);
-    transition:opacity .4s ease;
-  }
-  .ripple-frame:hover .rp-glow,.ripple-frame:focus-within .rp-glow{opacity:1;}
   /* floating light particles */
   .rp-spark{
     position:absolute;z-index:4;pointer-events:none;border-radius:50%;
@@ -1428,7 +1420,6 @@
     <div class="rp-aura" aria-hidden="true"></div>
     <div class="rp-sheen" aria-hidden="true"></div>
     <div class="rp-vin" aria-hidden="true"></div>
-    <div class="rp-glow" id="rpGlow" aria-hidden="true"></div>
     <span class="rp-spark rp-spark--1" aria-hidden="true"></span>
     <span class="rp-spark rp-spark--2" aria-hidden="true"></span>
     <span class="rp-spark rp-spark--3" aria-hidden="true"></span>
@@ -3526,29 +3517,6 @@ if (reduce) {
         }
       });
     }
-  })();
-</script>
-
-<script>
-  /* Ripple interface pointer light - smooth trailing glow */
-  (function () {
-    var glow = document.getElementById('rpGlow');
-    var frame = document.querySelector('.ripple-frame');
-    if (!glow || !frame) return;
-    var tx = 0, ty = 0, x = 0, y = 0, running = false;
-    function tick() {
-      x += (tx - x) * 0.14;
-      y += (ty - y) * 0.14;
-      glow.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%)';
-      if (running) requestAnimationFrame(tick);
-    }
-    frame.addEventListener('mousemove', function (e) {
-      var r = frame.getBoundingClientRect();
-      tx = e.clientX - r.left;
-      ty = e.clientY - r.top;
-      if (!running) { running = true; requestAnimationFrame(tick); }
-    });
-    frame.addEventListener('mouseleave', function () { running = false; });
   })();
 </script>
 
