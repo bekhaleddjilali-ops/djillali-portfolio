@@ -49,7 +49,7 @@
   .reveal-x-r.in{opacity:1;transform:translateX(0);}
 
   /* nav */
-  nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);transform:translateY(-100%);transition:transform .7s cubic-bezier(.25,.46,.45,.94), background .3s ease, box-shadow .3s ease, border-color .3s ease;}
+  nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--line);transform:translateY(-100%);transition:transform .7s cubic-bezier(.25,.46,.45,.94), background .3s ease, box-shadow .3s ease, border-color .3s ease;}
   nav.nav--show{transform:translateY(0);}
   .nav-inner{max-width:1280px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:padding .3s ease;}
   .nav-mark{font-family:'Fraunces',serif;font-size:16px;font-weight:500;transition:font-size .3s ease;}
@@ -651,11 +651,12 @@
     overflow:hidden;
   }
   .glass-clock::before{
-    content:'';position:absolute;left:-30%;right:-30%;top:-35%;height:120%;
-    background:linear-gradient(120deg,rgba(255,255,255,0.95),rgba(255,255,255,0.35) 30%,rgba(255,255,255,0.05) 55%,rgba(255,255,255,0.35));
-    filter:blur(6px);opacity:.7;pointer-events:none;
+    content:'';position:absolute;left:0;right:0;top:0;bottom:0;
+    background:linear-gradient(120deg,rgba(255,255,255,0.9),rgba(255,255,255,0.30) 30%,rgba(255,255,255,0.05) 55%,rgba(255,255,255,0.30));
+    opacity:.7;pointer-events:none;
     transform:translateX(-30%);
-    animation:glassSweep 6s ease-in-out infinite;
+    will-change:transform;
+    animation:glassSweep 8s ease-in-out infinite;
   }
   @keyframes glassSweep{0%,100%{transform:translateX(-30%)}50%{transform:translateX(30%)}}
   .gc-num{position:absolute;font-family:'Inter',sans-serif;font-size:8.5px;font-weight:500;color:rgba(50,50,50,0.8);line-height:1;}
@@ -668,9 +669,9 @@
   .gc-second::after{content:'';position:absolute;left:-1px;top:-7px;width:2px;height:7px;background:rgba(255,107,0,1);}
   .gc-center{position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:rgba(43,38,32,0.9);z-index:4;}
   .gc-brand{
-    position:absolute;left:0;right:0;bottom:16px;text-align:center;
-    font-family:'Fraunces',serif;font-size:7px;letter-spacing:0.32em;text-transform:uppercase;
-    color:rgba(50,50,50,0.75);z-index:2;pointer-events:none;
+    position:absolute;left:0;right:0;top:55%;text-align:center;
+    font-family:'Fraunces',serif;font-size:5.5px;letter-spacing:0.3em;text-transform:uppercase;
+    color:rgba(50,50,50,0.7);z-index:5;pointer-events:none;
   }
   .gc-caption{margin:0;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
 
@@ -3551,12 +3552,23 @@ if (reduce) {
       minHand.style.transform = 'rotate(' + (min * 6) + 'deg)';
       hourHand.style.transform = 'rotate(' + (hr * 30) + 'deg)';
     }
-    function tick() {
+    var raf = null;
+    var running = true;
+    function loop() {
       set(new Date(start + (Date.now() - start)));
-      requestAnimationFrame(tick);
+      raf = requestAnimationFrame(loop);
+    }
+    // Pause the rAF loop when the clock is off-screen to save CPU (fixes lag)
+    var startLoop = function () { if (running && raf === null) raf = requestAnimationFrame(loop); };
+    var stopLoop = function () { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) startLoop(); else stopLoop(); });
+      }).observe(clock);
+    } else {
+      startLoop();
     }
     set(new Date());
-    requestAnimationFrame(tick);
   })();
 </script>
 
