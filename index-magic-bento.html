@@ -638,6 +638,31 @@
   footer{padding:36px 0;border-top:1px solid var(--line);}
   .footer-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted);letter-spacing:0.05em;}
 
+  /* ===== Mini designed clock (footer) ===== */
+  .mini-clock-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:34px 0 0;}
+  .mini-clock{
+    position:relative;width:74px;height:74px;border-radius:50%;
+    background:linear-gradient(160deg,#ffffff,var(--linen));
+    border:1.5px solid var(--line);
+    box-shadow:0 14px 34px rgba(43,38,32,0.10), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .mini-clock::after{
+    content:'';position:absolute;inset:3px;border-radius:50%;
+    box-shadow:inset 0 2px 6px rgba(43,38,32,0.06);
+  }
+  .mc-tick{position:absolute;inset:7px;margin:auto;width:1px;height:6px;background:var(--muted);opacity:0.6;}
+  .mc-tick--12{top:6px;bottom:auto;height:8px;left:0;right:0;}
+  .mc-tick--6{bottom:6px;top:auto;height:8px;left:0;right:0;}
+  .mc-tick--3{left:auto;right:6px;top:0;bottom:0;width:8px;height:1px;}
+  .mc-tick--9{left:6px;right:auto;top:0;bottom:0;width:8px;height:1px;}
+  .mc-hand{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;border-radius:3px;z-index:2;}
+  .mc-hand--hour{width:2.5px;height:17px;margin-left:-1.25px;background:var(--charcoal);transform:rotate(0deg);}
+  .mc-hand--min{width:1.5px;height:24px;margin-left:-0.75px;background:var(--charcoal);transform:rotate(0deg);}
+  .mc-hand--sec{width:1px;height:27px;margin-left:-0.5px;background:var(--primary);transform:rotate(0deg);}
+  .mc-hand--sec::after{content:'';position:absolute;left:-2px;bottom:-3px;width:5px;height:5px;border-radius:50%;background:var(--primary);}
+  .mc-hub{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:var(--charcoal);z-index:3;}
+  .mc-label{margin:0;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
+
   ::selection{background:var(--primary);color:#fff;}
   :focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
 
@@ -1630,6 +1655,19 @@
     <span>© 2026 Djillali</span>
     <span data-i18n="footer.tagline">Built with care, one section at a time.</span>
   </div>
+  <div class="mini-clock-wrap">
+    <div class="mini-clock" id="miniClock" role="img" aria-label="Local time">
+      <div class="mc-tick mc-tick--12"></div>
+      <div class="mc-tick mc-tick--3"></div>
+      <div class="mc-tick mc-tick--6"></div>
+      <div class="mc-tick mc-tick--9"></div>
+      <div class="mc-hand mc-hand--hour" id="mcHour"></div>
+      <div class="mc-hand mc-hand--min" id="mcMin"></div>
+      <div class="mc-hand mc-hand--sec" id="mcSec"></div>
+      <div class="mc-hub"></div>
+    </div>
+    <p class="mc-label" data-i18n="footer.clock">Local time</p>
+  </div>
 </footer>
 
 <script>
@@ -1686,7 +1724,8 @@
       'about.sub':          { en: 'I\'m Djillali — a website designer and creator. I focus on what a site needs to actually work for you: clear structure, a clean look, and motion that guides rather than distracts. From a focused landing page to a full website, I build every detail with intent, so the result never feels assembled.', fr: 'Je suis Djillali — designer et créateur de sites web. Je me concentre sur ce dont un site a vraiment besoin pour vous servir : une structure claire, un rendu net et un mouvement qui guide sans distraire. D\'une landing page ciblée à un site complet, je construis chaque détail avec intention.', ar: 'أنا جيلالي — مصمم ومبدع مواقع. أركز على ما يحتاجه الموقع ليعمل فعلاً من أجلك: بنية واضحة، مظهر نظيف، وحركة توجّه بدل أن تُشتّت. من صفحة هبوط مركّزة إلى موقع كامل، أبني كل تفصيل بنيّة.' },
       'connect.eyebrow':    { en: 'Connect',        fr: 'Contact',      ar: 'تواصل' },
       'connect.title':      { en: 'Let’s Build Something', fr: 'Construisons quelque chose', ar: 'لنبنِ شيئاً معاً' },
-      'connect.sub':        { en: 'Open to freelance projects and full-time roles. Tell me your idea and let\'s build it.', fr: 'Ouvert aux projets freelance et aux postes permanents. Racontez-moi votre idée et construisons-la ensemble.', ar: 'متاح لمشاريع العمل الحر والوظائف. أخبرني بفكرتك ولنبنِها معاً.' }
+      'connect.sub':        { en: 'Open to freelance projects and full-time roles. Tell me your idea and let\'s build it.', fr: 'Ouvert aux projets freelance et aux postes permanents. Racontez-moi votre idée et construisons-la ensemble.', ar: 'متاح لمشاريع العمل الحر والوظائف. أخبرني بفكرتك ولنبنِها معاً.' },
+      'footer.clock':       { en: 'Local time',      fr: 'Heure locale',  ar: 'الوقت المحلي' }
     };
 
     var LANG = 'en';
@@ -3051,6 +3090,15 @@ if (reduce) {
       return;
     }
 
+    // Revealing via back/forward cache (browser back button) => skip preloader.
+    window.addEventListener('pageshow', function (ev) {
+      if (ev.persisted || sessionStorage.getItem('returnToPortfolio') === '1') {
+        try { sessionStorage.removeItem('returnToPortfolio'); } catch (e) {}
+        document.body.classList.add('page-loaded', 'skip-preloader');
+        pre.classList.add('hidden');
+      }
+    });
+
     // reveal ~3 seconds after the page starts loading â€” no waiting on slow assets
     setTimeout(function () {
       document.body.classList.add('page-loaded');
@@ -3444,6 +3492,37 @@ if (reduce) {
       var p = body.querySelectorAll('.kb-key.pressed');
       for (var i = 0; i < p.length; i++) p[i].classList.remove('pressed');
     });
+  })();
+</script>
+
+<script>
+  /* Mini designed clock */
+  (function () {
+    var clock = document.getElementById('miniClock');
+    if (!clock) return;
+    var h = document.getElementById('mcHour');
+    var m = document.getElementById('mcMin');
+    var s = document.getElementById('mcSec');
+    var start = Date.now();
+    function set(t) {
+      var sec = t.getSeconds();
+      var min = t.getMinutes();
+      var hr = t.getHours() % 12;
+      var secDeg = sec * 6;
+      var minDeg = min * 6 + sec * 0.1;
+      var hrDeg = hr * 30 + min * 0.5;
+      s.style.transform = 'rotate(' + secDeg + 'deg)';
+      m.style.transform = 'rotate(' + minDeg + 'deg)';
+      h.style.transform = 'rotate(' + hrDeg + 'deg)';
+    }
+    function tick() {
+      // smooth by anchoring to a fixed offset rather than re-reading each frame
+      var now = new Date(start + (Date.now() - start));
+      set(now);
+      requestAnimationFrame(tick);
+    }
+    set(new Date());
+    requestAnimationFrame(tick);
   })();
 </script>
 
