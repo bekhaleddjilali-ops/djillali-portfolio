@@ -1959,7 +1959,7 @@
       grayscale: true,
       highlightColor: '#ffffff',
       trigger: 'hover',
-      clickStrength: 2,
+      clickStrength: 4,
       quality: 'medium'
     };
 
@@ -2202,8 +2202,9 @@
 
     let previousX = 0, previousY = 0;
 
+    // Hover: trailing ripples as the cursor moves (always active).
     const onMove = event => {
-      if (reduceMotion || settings.trigger === 'click') return;
+      if (reduceMotion) return;
       const point = localPoint(event.clientX, event.clientY);
       if (!point) return;
       const step = Math.max(1, settings.spacing);
@@ -2214,15 +2215,36 @@
       }
     };
 
+    // Click: a strong splash burst right where you press.
     const onDown = event => {
-      if (reduceMotion || settings.trigger === 'hover') return;
+      if (reduceMotion) return;
       const point = localPoint(event.clientX, event.clientY);
       if (!point) return;
       setNewWave(point[0], point[1], Math.max(1, settings.clickStrength));
+      // a second, softer echo just off-centre for a fuller splash
+      setNewWave(point[0] - 8, point[1] - 6, settings.clickStrength * 0.7);
     };
 
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerdown', onDown, { passive: true });
+
+    // Ambient auto-motion: gentle waves breathe on their own so the
+    // water is never still, even when nobody is touching it.
+    let idleLast = 0;
+    let idleTimer = 0;
+    const IDLE_MIN = 700;
+    const IDLE_MAX = 1900;
+    function spawnIdle() {
+      if (!rippleVisible) return;
+      setNewWave(Math.random() * width, Math.random() * height, 0.6);
+    }
+    function idleCheck(now) {
+      if (now - idleLast >= idleTimer) {
+        idleLast = now;
+        idleTimer = IDLE_MIN + Math.random() * (IDLE_MAX - IDLE_MIN);
+        spawnIdle();
+      }
+    }
 
     let previousTime = 0;
     let rippleVisible = true;
@@ -2234,6 +2256,7 @@
       rippleLastFrame = now;
       const delta = previousTime ? Math.min(0.05, (now - previousTime) / 1000) : 0;
       previousTime = now;
+      idleCheck(now);
 
       const growth = reduceMotion ? 0 : 1 - Math.exp(-delta * 1.09);
       const decay = reduceMotion ? 1 : Math.exp((-delta * LIFE_CONSTANT) / Math.max(0.15, settings.fade));
