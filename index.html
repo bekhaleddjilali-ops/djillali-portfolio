@@ -40,13 +40,13 @@
   }
   .muted{color:var(--muted);}
 
-  /* reveal-on-scroll (mirrors whileInView) */
-  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94);}
-  .reveal.in{opacity:1;transform:translateY(0);}
-  .reveal-x-l{opacity:0;transform:translateX(-30px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94);}
-  .reveal-x-l.in{opacity:1;transform:translateX(0);}
-  .reveal-x-r{opacity:0;transform:translateX(30px);transition:opacity .8s cubic-bezier(.25,.46,.45,.94) .15s,transform .8s cubic-bezier(.25,.46,.45,.94) .15s;}
-  .reveal-x-r.in{opacity:1;transform:translateX(0);}
+  /* reveal-on-scroll (mirrors whileInView) - premium blur+scale entrance */
+  .reveal{opacity:0;transform:translateY(26px) scale(.985);filter:blur(6px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1),filter .9s cubic-bezier(.22,.61,.36,1);will-change:opacity,transform,filter;}
+  .reveal.in{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}
+  .reveal-x-l{opacity:0;transform:translateX(-32px) scale(.985);filter:blur(6px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1),filter .9s cubic-bezier(.22,.61,.36,1);will-change:opacity,transform,filter;}
+  .reveal-x-l.in{opacity:1;transform:translateX(0) scale(1);filter:blur(0);}
+  .reveal-x-r{opacity:0;transform:translateX(32px) scale(.985);filter:blur(6px);transition:opacity .9s cubic-bezier(.22,.61,.36,1) .15s,transform .9s cubic-bezier(.22,.61,.36,1) .15s,filter .9s cubic-bezier(.22,.61,.36,1) .15s;will-change:opacity,transform,filter;}
+  .reveal-x-r.in{opacity:1;transform:translateX(0) scale(1);filter:blur(0);}
 
   /* nav */
   nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--line);transform:translateY(-100%);transition:transform .7s cubic-bezier(.25,.46,.45,.94), background .3s ease, box-shadow .3s ease, border-color .3s ease;}
@@ -92,12 +92,30 @@
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:12px;
     padding:16px 40px;font-size:13px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
-    transition:transform .2s ease, background .2s ease, color .2s ease;
+    position:relative;overflow:hidden;
+    transition:transform .2s ease, background .2s ease, color .2s ease, box-shadow .35s ease;
   }
+  /* premium hover - soft brass glow shared by all buttons */
+  .btn:not(.btn-3d):hover{transform:translateY(-3px);box-shadow:0 16px 34px -14px rgba(169,116,79,.55);}
+  .btn:not(.btn-3d)::after{
+    content:'';position:absolute;top:0;left:-80%;height:100%;width:45%;
+    background:linear-gradient(115deg, transparent, rgba(255,255,255,.5), transparent);
+    transform:skewX(-20deg);pointer-events:none;transition:left .6s ease;
+  }
+  .btn:not(.btn-3d):hover::after{left:130%;}
   .btn-primary{background:var(--charcoal);color:var(--white);}
-  .btn-primary:hover{background:var(--primary);transform:translateY(-2px);}
+  .btn-primary:hover{background:var(--primary);transform:translateY(-3px);}
   .btn-outline{border:1px solid var(--charcoal);color:var(--charcoal);}
-  .btn-outline:hover{background:var(--charcoal);color:var(--white);}
+  .btn-outline:hover{background:var(--charcoal);color:var(--white);transform:translateY(-3px);}
+
+  /* subtle brass section divider - gold diamond flourish */
+  .sep-diamond{
+    width:18px;height:18px;
+    margin:-26px auto 30px;position:relative;z-index:5;
+    background:linear-gradient(135deg, #e3c98a, #a9744f);
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+    opacity:.9;box-shadow:0 0 16px rgba(227,201,138,.4);
+  }
 
   /* hero */
   .hero{position:relative;height:100svh;margin-top:-46px;overflow:hidden;}
@@ -1264,6 +1282,8 @@
   </div>
 </section>
 
+<div class="sep-diamond" aria-hidden="true"></div>
+
 <section class="highlights bg-linen">
   <div class="container-full">
     <div class="section-header reveal">
@@ -1432,6 +1452,8 @@
     </div>
   </div>
 </section>
+
+<div class="sep-diamond" aria-hidden="true"></div>
 
 <section class="skills" id="skills">
   <div class="container-full">
@@ -1737,6 +1759,7 @@
 </script>
 
 <!-- Features/connect icons shared path + framer-styled roles -->
+<div class="sep-diamond" aria-hidden="true"></div>
 <section class="about bg-linen" id="about">
   <div class="container-full">
     <div class="about-grid">
