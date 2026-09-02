@@ -638,30 +638,41 @@
   footer{padding:36px 0;border-top:1px solid var(--line);}
   .footer-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted);letter-spacing:0.05em;}
 
-  /* ===== Mini designed clock (footer) ===== */
-  .mini-clock-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:34px 0 0;}
-  .mini-clock{
-    position:relative;width:74px;height:74px;border-radius:50%;
-    background:linear-gradient(160deg,#ffffff,var(--linen));
-    border:1.5px solid var(--line);
-    box-shadow:0 14px 34px rgba(43,38,32,0.10), inset 0 1px 0 rgba(255,255,255,0.8);
+  /* ===== Glass-style analog clock (footer) ===== */
+  .glass-clock-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:36px 0 0;}
+  .glass-clock{
+    position:relative;width:92px;height:92px;border-radius:50%;
+    background:linear-gradient(160deg,rgba(255,255,255,0.9),rgba(243,238,228,0.7));
+    border:1.5px solid rgba(43,38,32,0.16);
+    box-shadow:
+      0 18px 40px rgba(43,38,32,0.16),
+      inset 0 12px 22px rgba(255,255,255,0.7),
+      inset 0 -8px 18px rgba(43,38,32,0.10);
+    overflow:hidden;
   }
-  .mini-clock::after{
-    content:'';position:absolute;inset:3px;border-radius:50%;
-    box-shadow:inset 0 2px 6px rgba(43,38,32,0.06);
+  .glass-clock::before{
+    content:'';position:absolute;left:-30%;right:-30%;top:-35%;height:120%;
+    background:linear-gradient(120deg,rgba(255,255,255,0.95),rgba(255,255,255,0.35) 30%,rgba(255,255,255,0.05) 55%,rgba(255,255,255,0.35));
+    filter:blur(6px);opacity:.7;pointer-events:none;
+    transform:translateX(-30%);
+    animation:glassSweep 6s ease-in-out infinite;
   }
-  .mc-tick{position:absolute;inset:7px;margin:auto;width:1px;height:6px;background:var(--muted);opacity:0.6;}
-  .mc-tick--12{top:6px;bottom:auto;height:8px;left:0;right:0;}
-  .mc-tick--6{bottom:6px;top:auto;height:8px;left:0;right:0;}
-  .mc-tick--3{left:auto;right:6px;top:0;bottom:0;width:8px;height:1px;}
-  .mc-tick--9{left:6px;right:auto;top:0;bottom:0;width:8px;height:1px;}
-  .mc-hand{position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;border-radius:3px;z-index:2;}
-  .mc-hand--hour{width:2.5px;height:17px;margin-left:-1.25px;background:var(--charcoal);transform:rotate(0deg);}
-  .mc-hand--min{width:1.5px;height:24px;margin-left:-0.75px;background:var(--charcoal);transform:rotate(0deg);}
-  .mc-hand--sec{width:1px;height:27px;margin-left:-0.5px;background:var(--primary);transform:rotate(0deg);}
-  .mc-hand--sec::after{content:'';position:absolute;left:-2px;bottom:-3px;width:5px;height:5px;border-radius:50%;background:var(--primary);}
-  .mc-hub{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:var(--charcoal);z-index:3;}
-  .mc-label{margin:0;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
+  @keyframes glassSweep{0%,100%{transform:translateX(-30%)}50%{transform:translateX(30%)}}
+  .gc-num{position:absolute;font-family:'Inter',sans-serif;font-size:8.5px;font-weight:500;color:rgba(50,50,50,0.8);line-height:1;}
+  .gc-mark{position:absolute;left:50%;top:4px;width:1px;height:4.5px;margin-left:-0.5px;background:rgba(80,80,80,0.5);transform-origin:50% 42px;}
+  .gc-hand{position:absolute;left:50%;bottom:50%;z-index:2;border-radius:3px;transform-origin:50% 100%;}
+  .gc-hand--hour{width:3px;height:20px;margin-left:-1.5px;background:rgba(43,38,32,0.9);}
+  .gc-hand--min{width:1.8px;height:29px;margin-left:-0.9px;background:rgba(43,38,32,0.9);}
+  .gc-second{position:absolute;left:50%;bottom:50%;width:1.2px;height:34px;margin-left:-0.6px;background:rgba(255,107,0,1);z-index:3;transform-origin:50% 100%;}
+  .gc-second::before{content:'';position:absolute;left:-3px;bottom:-4px;width:6px;height:6px;border-radius:50%;background:rgba(255,107,0,1);}
+  .gc-second::after{content:'';position:absolute;left:-1px;top:-7px;width:2px;height:7px;background:rgba(255,107,0,1);}
+  .gc-center{position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:rgba(43,38,32,0.9);z-index:4;}
+  .gc-brand{
+    position:absolute;left:0;right:0;bottom:16px;text-align:center;
+    font-family:'Fraunces',serif;font-size:7px;letter-spacing:0.32em;text-transform:uppercase;
+    color:rgba(50,50,50,0.75);z-index:2;pointer-events:none;
+  }
+  .gc-caption{margin:0;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
 
   ::selection{background:var(--primary);color:#fff;}
   :focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
@@ -1655,18 +1666,11 @@
     <span>© 2026 Djillali</span>
     <span data-i18n="footer.tagline">Built with care, one section at a time.</span>
   </div>
-  <div class="mini-clock-wrap">
-    <div class="mini-clock" id="miniClock" role="img" aria-label="Local time">
-      <div class="mc-tick mc-tick--12"></div>
-      <div class="mc-tick mc-tick--3"></div>
-      <div class="mc-tick mc-tick--6"></div>
-      <div class="mc-tick mc-tick--9"></div>
-      <div class="mc-hand mc-hand--hour" id="mcHour"></div>
-      <div class="mc-hand mc-hand--min" id="mcMin"></div>
-      <div class="mc-hand mc-hand--sec" id="mcSec"></div>
-      <div class="mc-hub"></div>
+  <div class="glass-clock-wrap">
+    <div class="glass-clock" id="glassClock" role="img" aria-label="Local time">
+      <div class="gc-brand">Djillali</div>
     </div>
-    <p class="mc-label" data-i18n="footer.clock">Local time</p>
+    <p class="gc-caption" data-i18n="footer.clock">Local time</p>
   </div>
 </footer>
 
@@ -3496,29 +3500,59 @@ if (reduce) {
 </script>
 
 <script>
-  /* Mini designed clock */
+  /* Glass-style analog clock */
   (function () {
-    var clock = document.getElementById('miniClock');
+    var clock = document.getElementById('glassClock');
     if (!clock) return;
-    var h = document.getElementById('mcHour');
-    var m = document.getElementById('mcMin');
-    var s = document.getElementById('mcSec');
     var start = Date.now();
+
+    // build hour numbers 12..11 around the dial
+    for (var i = 0; i < 12; i++) {
+      var num = document.createElement('div');
+      num.className = 'gc-num';
+      var a = i * 30 * Math.PI / 180;
+      var cx = 46, cy = 46, rad = 34;
+      num.style.left = (cx + Math.sin(a) * rad - 4) + 'px';
+      num.style.top = (cy - Math.cos(a) * rad - 4) + 'px';
+      num.textContent = (i === 0 ? 12 : i).toString();
+      clock.appendChild(num);
+    }
+
+    // build 60 minute marks (skip the 4 cardinal ones for an uncluttered glass look)
+    var NS = ['0deg', '90deg', '180deg', '270deg'];
+    for (var j = 0; j < 60; j++) {
+      if (j % 5 === 0) continue;
+      if (NS.indexOf((j * 6) + 'deg') !== -1) continue;
+      var mark = document.createElement('div');
+      mark.className = 'gc-mark';
+      mark.style.transform = 'rotate(' + (j * 6) + 'deg)';
+      clock.appendChild(mark);
+    }
+
+    // hands
+    var hourHand = document.createElement('div');
+    hourHand.className = 'gc-hand gc-hand--hour';
+    var minHand = document.createElement('div');
+    minHand.className = 'gc-hand gc-hand--min';
+    var sec = document.createElement('div');
+    sec.className = 'gc-second';
+    var center = document.createElement('div');
+    center.className = 'gc-center';
+    clock.appendChild(hourHand);
+    clock.appendChild(minHand);
+    clock.appendChild(sec);
+    clock.appendChild(center);
+
     function set(t) {
-      var sec = t.getSeconds();
-      var min = t.getMinutes();
-      var hr = t.getHours() % 12;
-      var secDeg = sec * 6;
-      var minDeg = min * 6 + sec * 0.1;
-      var hrDeg = hr * 30 + min * 0.5;
-      s.style.transform = 'rotate(' + secDeg + 'deg)';
-      m.style.transform = 'rotate(' + minDeg + 'deg)';
-      h.style.transform = 'rotate(' + hrDeg + 'deg)';
+      var secV = t.getSeconds() + t.getMilliseconds() / 1000;
+      var min = t.getMinutes() + secV / 60;
+      var hr = (t.getHours() % 12) + min / 60;
+      sec.style.transform = 'rotate(' + (secV * 6) + 'deg)';
+      minHand.style.transform = 'rotate(' + (min * 6) + 'deg)';
+      hourHand.style.transform = 'rotate(' + (hr * 30) + 'deg)';
     }
     function tick() {
-      // smooth by anchoring to a fixed offset rather than re-reading each frame
-      var now = new Date(start + (Date.now() - start));
-      set(now);
+      set(new Date(start + (Date.now() - start)));
       requestAnimationFrame(tick);
     }
     set(new Date());
