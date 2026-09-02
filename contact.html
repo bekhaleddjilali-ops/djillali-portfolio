@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start a Project | Djillali</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#2B2620;
+    --foreground:#2B2620;
+    --linen:#F3EEE4;
+    --linen-2:#EAE2D3;
+    --primary:#A9744F;
+    --muted:#8A8071;
+    --white:#FFFFFF;
+    --line:rgba(43,38,32,0.1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+    background:var(--linen);
+    color:var(--foreground);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .font-serif{font-family:'Fraunces',serif;}
+
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* header */
+  header{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(255,255,255,0.9);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .brand{font-family:'Fraunces',serif;font-size:18px;letter-spacing:.02em;font-weight:500;}
+  .brand em{font-style:normal;color:var(--primary);}
+  .nav a.back{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .2s;}
+  .nav a.back:hover{color:var(--foreground);}
+  .nav a.back svg{width:15px;height:15px;}
+  .lang-switch{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:#fff;order:2;}
+  .lang-switch .lang-btn{appearance:none;border:0;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.03em;color:var(--muted);padding:6px 12px;border-radius:999px;transition:all .25s ease;line-height:1;}
+  .lang-switch .lang-btn:hover{color:var(--charcoal);}
+  .lang-switch .lang-btn.is-active{background:var(--charcoal);color:var(--linen);}
+  @media(max-width:620px){.nav a.back span{display:none;}.lang-switch{order:1;}}
+  html[dir="rtl"] .brand{order:2;}
+
+  /* hero */
+  .hero{padding:76px 0 40px;text-align:center;}
+  .eyebrow{display:inline-block;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--primary);margin-bottom:18px;}
+  .hero h1{font-size:clamp(42px,8vw,84px);line-height:.98;font-weight:500;letter-spacing:-.02em;}
+  .hero .sub{max-width:540px;margin:20px auto 0;color:var(--muted);font-size:17px;}
+
+  /* phone strip */
+  .phone-strip{
+    margin:34px auto 0;max-width:520px;display:flex;align-items:center;justify-content:center;gap:14px;
+    flex-wrap:wrap;
+  }
+  .phone-pill{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:13px 22px;border-radius:999px;
+    background:var(--charcoal);color:var(--linen);
+    font-size:18px;font-weight:500;letter-spacing:.04em;
+    box-shadow:0 10px 30px -12px rgba(34,29,24,0.5);
+    transition:transform .25s ease,box-shadow .25s ease;
+  }
+  .phone-pill svg{width:17px;height:17px;color:var(--primary);}
+  .phone-pill.pulse{animation:pulse 2.6s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(169,116,79,.45);}
+    70%{box-shadow:0 0 0 16px rgba(169,116,79,0);}
+    100%{box-shadow:0 0 0 0 rgba(169,116,79,0);}
+  }
+
+  /* layout */
+  .grid{display:grid;grid-template-columns:1fr;gap:44px;padding:30px 0 90px;}
+  @media(min-width:880px){.grid{grid-template-columns:340px 1fr;gap:60px;align-items:start;}}
+
+  .side{position:sticky;top:110px;}
+  /* On phones the sidebar info stacks above the form; keep it scrollable, not pinned */
+  @media(max-width:879px){.side{position:static;}}
+  .side h3{font-size:28px;font-weight:500;margin-bottom:8px;}
+  .side p{color:var(--muted);font-size:15px;}
+  .side .or{display:flex;align-items:center;gap:14px;margin:26px 0;color:var(--muted);font-size:12px;letter-spacing:.15em;text-transform:uppercase;}
+  .side .or::before,.side .or::after{content:'';flex:1;height:1px;background:var(--line);}
+  .quick{display:flex;flex-direction:column;gap:10px;}
+  .quick a{
+    display:flex;align-items:center;gap:12px;padding:15px 18px;border-radius:14px;
+    background:#fff;border:1px solid var(--line);
+    font-size:14px;font-weight:500;transition:transform .2s,box-shadow .2s,border-color .2s;
+  }
+  .quick a:hover{transform:translateY(-2px);box-shadow:0 14px 30px -16px rgba(34,29,24,.35);border-color:rgba(169,116,79,.5);}
+  .quick a svg{width:19px;height:19px;color:var(--primary);flex:none;}
+  .quick a small{color:var(--muted);font-weight:400;display:block;font-size:12px;}
+
+  /* form */
+  .card{
+    background:#fff;border-radius:24px;padding:38px;
+    border:1px solid var(--line);
+    box-shadow:0 30px 70px -40px rgba(34,29,24,.35);
+  }
+  .card h2{font-size:34px;font-weight:500;margin-bottom:6px;}
+  .card .lead{color:var(--muted);font-size:15px;margin-bottom:30px;}
+  .form-grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  @media(min-width:560px){.form-grid{grid-template-columns:1fr 1fr;}}
+  .field{display:flex;flex-direction:column;gap:7px;}
+  .field.full{grid-column:1 / -1;}
+  label{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--foreground);}
+  label .req{color:var(--primary);}
+  input,select,textarea{
+    font-family:inherit;font-size:15px;color:var(--foreground);
+    padding:13px 15px;border-radius:12px;
+    border:1px solid var(--line);background:var(--linen);
+    transition:border-color .2s,box-shadow .2s,background .2s;
+    width:100%;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--primary);
+    background:#fff;box-shadow:0 0 0 4px rgba(169,116,79,.15);
+  }
+  textarea{resize:vertical;min-height:140px;}
+  select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%238B8172' stroke-width='2'%3E%3Cpath d='M3 5l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center;}
+
+  .hint{font-size:12px;color:var(--muted);}
+
+  .cta-row{display:flex;flex-direction:column;gap:12px;margin-top:26px;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-family:inherit;font-size:15px;font-weight:600;letter-spacing:.03em;
+    padding:16px 26px;border-radius:999px;border:none;cursor:pointer;
+    transition:transform .2s,box-shadow .2s;
+  }
+  .btn-primary{background:var(--charcoal);color:var(--linen);position:relative;overflow:hidden;}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 40px -18px rgba(34,29,24,.6);}
+  .btn-primary .shine{
+    position:absolute;top:0;left:-80%;width:60%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(243,238,228,.25),transparent);
+    transform:skewX(-20deg);animation:shine 3.2s infinite;
+  }
+  @keyframes shine{0%{left:-80%}50%{left:130%}100%{left:130%}}
+  .btn-whatsapp{background:#128C7E;color:#fff;}
+  .btn-whatsapp:hover{transform:translateY(-2px);box-shadow:0 18px 40px -18px rgba(18,140,126,.6);}
+  .btn svg{width:18px;height:18px;}
+  .privacy{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;}
+
+  .note{
+    margin-top:22px;padding:14px 18px;border-radius:12px;
+    background:rgba(169,116,79,.08);border:1px solid rgba(169,116,79,.25);
+    font-size:13px;color:var(--charcoal);
+  }
+
+  #status.ok{background:rgba(18,140,126,.10);border:1px solid rgba(18,140,126,.35);}
+  #status.error{background:rgba(191,57,42,.08);border:1px solid rgba(191,57,42,.30);}
+  #status.neutral{background:rgba(169,116,79,.08);border:1px solid rgba(169,116,79,.25);}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;text-align:center;color:var(--muted);font-size:13px;}
+  footer a{color:var(--primary);font-weight:500;}
+
+  /* === Offers (mirrors portfolio) === */
+  .offers{padding:90px 0 110px;position:relative;overflow:hidden;}
+  .offers::before{
+    content:'';position:absolute;top:-140px;left:50%;transform:translateX(-50%);
+    width:720px;height:720px;pointer-events:none;
+    background:radial-gradient(circle, rgba(169,116,79,.13), transparent 62%);
+  }
+  .offers .sec-head{text-align:center;margin-bottom:10px;position:relative;}
+  .offers .sec-head h2{font-size:clamp(30px,5vw,44px);font-weight:500;letter-spacing:-.01em;color:var(--charcoal);}
+  .offers .sec-head p{max-width:560px;margin:10px auto 0;color:var(--muted);font-size:15px;}
+  .off-scene{position:relative;perspective:1500px;padding-top:60px;}
+  .off-tilt{transform-style:preserve-3d;will-change:transform;}
+  .off-grid{display:grid;grid-template-columns:1fr;gap:26px;max-width:880px;margin:0 auto;transform-style:preserve-3d;}
+  @media(min-width:690px){.off-grid{grid-template-columns:repeat(2,1fr);gap:30px;}}
+  .off-card{
+    position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;
+    padding:34px 30px;display:flex;flex-direction:column;text-align:left;
+    box-shadow:0 40px 80px -34px rgba(43,38,32,.4);
+    transform-style:flat;isolation:isolate;will-change:transform;
+  }
+  .off-card::after{
+    content:'';position:absolute;inset:0;border-radius:22px;pointer-events:none;
+    background:linear-gradient(125deg, rgba(169,116,79,.14), transparent 45%);
+    opacity:0;transition:opacity .4s ease;
+  }
+  .off-card:hover::after{opacity:1;}
+  .off-card > *{position:relative;z-index:1;}
+  .off-card--pop{--d:0;border:2px solid var(--primary);}
+  .off-card--p1{--d:-1;}
+  @media(prefers-reduced-motion:reduce){.off-card{transform:none!important;}}
+  .off-badge{
+    position:absolute;top:0;right:0;background:var(--primary);color:#fff;
+    padding:6px 14px;border-radius:0 22px 0 16px;display:flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:600;letter-spacing:.03em;
+  }
+  .off-badge svg{width:14px;height:14px;fill:currentColor;}
+  .off-icon{
+    width:52px;height:52px;border-radius:14px;background:var(--linen);display:grid;place-items:center;
+    color:var(--primary);margin-bottom:18px;border:1px solid var(--line);
+  }
+  .off-icon svg{width:26px;height:26px;}
+  .off-name{font-size:16px;font-weight:600;color:var(--muted);letter-spacing:.02em;}
+  .off-title{font-family:'Fraunces',serif;font-size:30px;line-height:1.12;color:var(--charcoal);margin:8px 0 6px;}
+  .off-price{display:flex;align-items:baseline;gap:5px;margin:18px 0 2px;}
+  .off-price .cur{font-size:22px;font-weight:600;color:var(--foreground);}
+  .off-price .amt{font-family:'Fraunces',serif;font-size:58px;font-weight:600;line-height:1;color:var(--foreground);}
+  .off-price .per{font-size:13px;font-weight:600;color:var(--muted);}
+  .currency-toggle{display:flex;width:max-content;align-items:center;gap:4px;padding:5px;margin:0 auto 30px;background:#fff;border:1px solid var(--line);border-radius:999px;box-shadow:0 10px 26px -16px rgba(34,29,24,.4);}
+  .currency-toggle .cur-btn{appearance:none;border:0;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--muted);padding:9px 20px;border-radius:999px;transition:all .28s ease;}
+  .currency-toggle .cur-btn:hover{color:var(--charcoal);}
+  .currency-toggle .cur-btn.is-active{background:var(--charcoal);color:var(--linen);box-shadow:0 6px 14px -6px rgba(34,29,24,.5);}
+  .off-price.flip .amt{transform:translateY(-26px);opacity:0;}
+  .off-price .amt{transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .32s ease;}
+  .off-feats{list-style:none;margin:18px 0 0;padding:14px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:11px;}
+  .off-feats li{display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.5;color:var(--charcoal);}
+  .off-feats li svg{width:17px;height:17px;color:var(--primary);margin-top:2px;flex:none;}
+  .off-btn{
+    --b-primary:var(--primary);
+    position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;
+    font-family:inherit;font-size:16px;font-weight:600;letter-spacing:.01em;
+    padding:16px 22px;border-radius:999px;border:1px solid var(--line);
+    background:linear-gradient(120deg,#ffffff 0%,#fbf7f0 60%,#ffffff 100%);
+    color:var(--foreground);cursor:pointer;text-decoration:none;margin-top:22px;overflow:hidden;
+    box-shadow:0 12px 30px -16px rgba(43,38,32,.5);
+    transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,color .3s ease;
+  }
+  .off-btn::before{
+    content:'';position:absolute;top:0;left:-160%;width:60%;height:100%;
+    background:linear-gradient(115deg, transparent, rgba(169,116,79,.30), transparent);
+    transform:skewX(-20deg);pointer-events:none;z-index:1;
+  }
+  .off-btn:hover::before{animation:btShine .85s ease forwards;}
+  @keyframes btShine{to{left:170%;}}
+  .off-btn .bt-txt{position:relative;z-index:2;transition:transform .35s cubic-bezier(.22,1,.36,1),letter-spacing .35s ease;}
+  .off-btn .bt-ico{position:relative;z-index:2;display:inline-flex;transition:transform .4s cubic-bezier(.22,1,.36,1);}
+  .off-btn:hover .bt-ico{transform:translateX(6px);}
+  .off-btn:hover .bt-txt{transform:translateX(-2px);letter-spacing:.02em;}
+  .off-btn:hover{transform:translateY(-4px) scale(1.02) rotateX(-4deg);box-shadow:0 28px 55px -22px rgba(169,116,79,.6);border-color:var(--primary);}
+  .off-btn:active{transform:translateY(0) scale(.98);transition-duration:.12s;}
+  .off-btn--primary{
+    background:linear-gradient(120deg,var(--primary) 0%,#bd8a5f 50%,var(--primary) 100%);
+    background-size:200% 100%;color:#fff;border-color:transparent;
+    box-shadow:0 16px 40px -18px rgba(169,116,79,.7);
+  }
+  .off-btn--primary:hover{background-position:right center;color:#fff;transform:translateY(-4px) scale(1.02) rotateX(-4deg);box-shadow:0 30px 60px -20px rgba(169,116,79,.9);}
+  .off-btn--primary::before{background:linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);}
+  .off-btn--primary::after{
+    content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(circle at 30% 40%, rgba(255,255,255,.4), transparent 55%);
+    opacity:.35;mix-blend-mode:overlay;z-index:1;animation:btGlint 3.4s ease-in-out infinite;
+  }
+  @keyframes btGlint{0%,100%{transform:translateX(-18px) rotate(0turn);opacity:.2;}50%{opacity:.55;}}
+  .bt-rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.7);transform:scale(0);opacity:0;pointer-events:none;z-index:3;mix-blend-mode:soft-light;}
+  #offScene.inview .off-btn{animation:btIn .7s cubic-bezier(.22,1,.36,1) both;}
+  #offScene.inview .off-card--pop .off-btn{animation-delay:.22s;}
+  @keyframes btIn{
+    0%{opacity:0;transform:translateY(24px) scale(.75);}
+    60%{opacity:1;}
+    100%{opacity:1;transform:translateY(0) scale(1);}
+  }
+  .off-note{margin:30px auto 0;max-width:560px;text-align:center;color:var(--muted);font-size:14px;line-height:1.7;position:relative;}
+  .off-note strong{color:var(--charcoal);font-weight:600;}
+  .off-scene{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+  .off-scene.inview{opacity:1;transform:none;}
+  @media(min-width:690px){
+    .off-tilt{transition:transform .18s ease-out;}
+  }
+
+  @media(max-width:540px){.card{padding:26px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index-magic-bento.html">Djillali<em>.</em></a>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" class="lang-btn is-active" data-lang="en">EN</button>
+      <button type="button" class="lang-btn" data-lang="fr">FR</button>
+      <button type="button" class="lang-btn" data-lang="ar">عربي</button>
+    </div>
+    <a class="back" href="index-magic-bento.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      <span data-i18n="back">Back to portfolio</span>
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Let's work together</span>
+    <h1 class="font-serif">Start a Project</h1>
+    <p class="sub">Tell me a little about what you're building. Drop your details and the idea — I'll get back to you quickly.</p>
+    <div class="phone-strip">
+      <a class="phone-pill pulse" href="tel:+213665977002" title="Call Djillali">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.5-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.8 2Z"/></svg>
+        <span>0665 977 002</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap grid">
+  <aside class="side">
+    <h3 class="font-serif">Talk direct</h3>
+    <p>Prefer a quick chat? Reach me on WhatsApp or email and I'll reply as soon as I can.</p>
+    <div class="or">or</div>
+    <div class="quick">
+      <a href="https://wa.me/213665977002" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.36 2 2 6.19 2 11.7a9.4 9.4 0 0 0 3.9 7.66V22l3.63-1.99a11.7 11.7 0 0 0 2.5.27h.02c5.68 0 10.03-4.19 10.03-9.7S17.73 2 12.04 2Zm5.8 13.93c-.24.68-1.4 1.33-1.93 1.38-.52.05-1.02.24-3.42-.71-2.89-1.16-4.72-4.15-4.86-4.34-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.09 1-2.38.25-.29.56-.36.75-.36h.54c.17 0 .41-.06.64.49.24.56.8 1.94.87 2.08.07.14.12.31.02.5-.09.19-.14.31-.28.48l-.42.5c-.14.15-.29.31-.13.6.17.29.74 1.21 1.59 1.96 1.09.97 2 1.27 2.3 1.41.29.14.46.12.63-.07.17-.19.73-.85.92-1.14.19-.29.38-.24.65-.14.27.1 1.69.8 1.98.95.29.14.48.22.55.34.07.12.07.68-.16 1.35Z"/></svg>
+        <span>WhatsApp<small>Fastest reply</small></span>
+      </a>
+      <a href="mailto:bekhaleddjilali0@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        <span>bekhaleddjilali0@gmail.com<small>For detailed briefs</small></span>
+      </a>
+      <a href="tel:+213665977002">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.5-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.8 2Z"/></svg>
+        <span>+213 665 977 002<small>Call me</small></span>
+      </a>
+    </div>
+    <div class="note">Your details stay between us — I only use them to reply to your project.</div>
+  </aside>
+
+  <div class="card">
+    <h2 class="font-serif">Fill in the form</h2>
+    <p class="lead">What would you like built or imagined?</p>
+    <form id="contactForm" action="https://formsubmit.co/bekhaleddjilali0@gmail.com" method="POST">
+      <div class="form-grid">
+        <div class="field">
+          <label for="name">Your name <span class="req">*</span></label>
+          <input id="name" name="name" type="text" placeholder="e.g. Amine" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone / WhatsApp</label>
+          <input id="phone" name="phone" type="tel" placeholder="e.g. 0555 00 00 00">
+        </div>
+        <div class="field full">
+          <label for="email">Email <span class="req">*</span></label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label for="type">What do you need?</label>
+          <select id="type" name="type">
+            <option value="">Choose one…</option>
+            <option>New website</option>
+            <option>Landing page</option>
+            <option>Not sure yet</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="budget">Budget range</label>
+          <select id="budget" name="budget">
+            <option value="">Select…</option>
+            <option value="landing-5000">Landing page — 5 000 DA (virement)</option>
+            <option value="site-7500">Site complet — 7 500 DA (virement)</option>
+            <option>&lt; $20</option>
+            <option>$20 – $50</option>
+            <option>$50 – $75</option>
+            <option>$75 – $100</option>
+            <option>Not sure yet</option>
+          </select>
+          <span class="hint">Clientele in Algeria? Prices in dinars (DA) + bank transfer (RIB). International: USD + arranged via WhatsApp.</span>
+        </div>
+        <div class="field full">
+          <label for="timeline">Timeline</label>
+          <input id="timeline" name="timeline" type="text" placeholder="e.g. within a month, flexible, ASAP…">
+        </div>
+        <div class="field full">
+          <label for="message">Describe your project <span class="req">*</span></label>
+          <textarea id="message" name="message" placeholder="Tell me about your idea, the goal, the vibe you're after, timelines…" required></textarea>
+          <span class="hint">The more detail, the better the first reply.</span>
+        </div>
+      </div>
+      <div class="cta-row">
+        <button type="submit" id="sendBtn" class="btn btn-primary">Send Message <span class="shine"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <button type="button" class="btn btn-whatsapp" id="waPlain">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.36 2 2 6.19 2 11.7a9.4 9.4 0 0 0 3.9 7.66V22l3.63-1.99a11.7 11.7 0 0 0 2.5.27h.02c5.68 0 10.03-4.19 10.03-9.7S17.73 2 12.04 2Zm5.8 13.93c-.24.68-1.4 1.33-1.93 1.38-.52.05-1.02.24-3.42-.71-2.89-1.16-4.72-4.15-4.86-4.34-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.09 1-2.38.25-.29.56-.36.75-.36h.54c.17 0 .41-.06.64.49.24.56.8 1.94.87 2.08.07.14.12.31.02.5-.09.19-.14.31-.28.48l-.42.5c-.14.15-.29.31-.13.6.17.29.74 1.21 1.59 1.96 1.09.97 2 1.27 2.3 1.41.29.14.46.12.63-.07.17-.19.73-.85.92-1.14.19-.29.38-.24.65-.14.27.1 1.69.8 1.98.95.29.14.48.22.55.34.07.12.07.68-.16 1.35Z"/></svg>
+          WhatsApp instead
+        </button>
+      </div>
+      <div id="status" style="display:none;margin-top:18px;padding:15px 18px;border-radius:12px;font-size:14px;line-height:1.5;"></div>
+      <p class="privacy">Your message is emailed to Djillali securely — I only use it to reply to your project. Prefer chat instead? Use the WhatsApp button.</p>
+    </form>
+  </div>
+</div>
+
+<!-- Offers: honest design trio (mirrors portfolio) -->
+<section class="offers">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Pricing</span>
+      <h2 class="font-serif">Two clear offers</h2>
+      <p>I design and build websites — that's the craft. Flat pricing, no surprises.</p>
+    </div>
+    <div class="currency-toggle" role="group" aria-label="Currency">
+      <button type="button" data-ccy="DA" class="cur-btn">DA</button>
+      <button type="button" data-ccy="USD" class="cur-btn is-active">$</button>
+      <button type="button" data-ccy="EUR" class="cur-btn">€</button>
+    </div>
+    <div class="off-scene" id="offScene">
+      <div class="off-tilt" id="offTilt">
+        <div class="off-grid">
+          <!-- Card 1: Landing Page -->
+          <div class="off-card off-card--p1" data-off data-depth="-70" data-off-card="landing">
+            <div class="off-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 8h9M6 11h6"/></svg>
+            </div>
+            <p class="off-name">One page</p>
+            <h3 class="off-title">Landing Page</h3>
+            <ul class="off-feats">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Designed &amp; built from scratch</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Responsive on every device</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>A single, focused goal</li>
+            </ul>
+            <div class="off-price"><span class="cur">$</span><span class="amt" data-amt>30</span><span class="per">/ project</span></div>
+<a href="#contactForm" class="off-btn" data-bt>
+            <span class="bt-txt">Start a page</span>
+            <span class="bt-ico">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+            <span class="bt-rip" aria-hidden="true"></span>
+          </a>
+          </div>
+
+          <!-- Card 2: New Website (popular) -->
+          <div class="off-card off-card--pop" data-off data-depth="-30" data-off-card="website">
+            <div class="off-badge">
+              <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8-6.1-3.4-6.1 3.4 1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+              Popular
+            </div>
+            <div class="off-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v14H4z"/><path d="M4 9h16M8 7h.01M12 7h.01"/><rect x="7" y="12" width="5" height="3"/></svg>
+            </div>
+            <p class="off-name">Design &amp; build</p>
+            <h3 class="off-title">New Website</h3>
+            <ul class="off-feats">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Full site designed &amp; built</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Multiple pages, cohesive look</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Ready to go live</li>
+            </ul>
+<div class="off-price"><span class="cur">$</span><span class="amt" data-amt>45</span><span class="per">/ project</span></div>
+<a href="#contactForm" class="off-btn off-btn--primary" data-bt>
+            <span class="bt-txt">Build my website</span>
+            <span class="bt-ico">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+            <span class="bt-rip" aria-hidden="true"></span>
+          </a>
+          </div>
+        </div>
+      </div>
+      <p class="off-note">Every project is <strong>designed &amp; built by me</strong> — from first sketch to a live page. Customers in Algeria? Switch to <strong>DA</strong> above and pay by <a href="index-dzd.html" style="color:var(--primary);font-weight:600;">bank transfer (RIB)</a>. Not sure what you need? <a href="#contactForm" style="color:var(--primary);font-weight:600;">Let's talk</a> and I'll point you in the right direction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Offers: 3D parallax (same engine as portfolio) -->
+<script>
+  (function () {
+    var scene = document.getElementById('offScene');
+    var tilt = document.getElementById('offTilt');
+    if (!scene || !tilt) return;
+    var cards = Array.prototype.slice.call(scene.querySelectorAll('[data-off]'));
+    if (!cards.length) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fine = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+    if (reduce || !fine) { cards.forEach(function (c) { c.style.transform = 'translateX(0)'; }); return; }
+
+    var mx = 0, my = 0, tx = 0, ty = 0, rx = 0, ry = 0;
+    var W = 1, H = 1, running = false;
+    cards.forEach(function (c, i) { c.dataset.ph = i * 1.5; });
+
+    function onMove(e) {
+      var r = scene.getBoundingClientRect();
+      if (!r.width) return;
+      W = r.width; H = r.height;
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      tx = e.clientX - cx; ty = e.clientY - cy;
+      if (!running) { running = true; requestAnimationFrame(loop); }
+    }
+    scene.addEventListener('mousemove', onMove);
+    scene.addEventListener('mouseleave', function () { tx = 0; ty = 0; });
+
+    function loop() {
+      mx += (tx - mx) * 0.06;
+      my += (ty - my) * 0.06;
+      ry = (mx / Math.max(W, 1)) * 8;
+      rx = -((my / Math.max(H, 1)) * 8);
+      var pi = (performance.now() % 6000) / 6000;
+      tilt.style.transform =
+        'rotateX(' + (rx + Math.sin(pi * Math.PI * 2) * 0.7) + 'deg) ' +
+        'rotateY(' + ry + 'deg)';
+      cards.forEach(function (c) {
+        var ph = Number(c.dataset.ph || 0);
+        var float = Math.sin(pi * Math.PI * 2 + ph) * (c === cards[1] ? 10 : 7);
+        var pX = (mx / W) * 14;
+        var pY = (my / H) * 10;
+        c.style.transform = 'translate3d(' + (pX + (c === cards[1] ? -2 : 2)).toFixed(1) + 'px,' + (float + pY).toFixed(1) + 'px,0)';
+      });
+      running = false;
+      var still = Math.abs(tx - mx) > 0.05 || Math.abs(ty - my) > 0.05;
+      if (still) { running = true; requestAnimationFrame(loop); }
+    }
+
+    function idle() {
+      if (!running) {
+        var pi = (performance.now() % 6000) / 6000;
+        tilt.style.transform = 'rotateX(' + Math.sin(pi * Math.PI * 2) * 0.7 + 'deg) rotateY(0deg)';
+        cards.forEach(function (c) {
+          var ph = Number(c.dataset.ph || 0);
+          var float = Math.sin(pi * Math.PI * 2 + ph) * (c === cards[1] ? 10 : 7);
+          c.style.transform = 'translate3d(0,' + float.toFixed(1) + 'px,0)';
+        });
+      }
+      requestAnimationFrame(idle);
+    }
+    idle();
+  })();
+</script>
+
+<footer>
+  <div class="wrap">© 2026 Djillali — Back to the <a href="index-magic-bento.html">portfolio</a>.</div>
+</footer>
+
+<script>
+  var form = document.getElementById('contactForm');
+  var number = '213665977002';
+
+  function openWa(text){
+    window.open('https://wa.me/' + number + '?text=' + encodeURIComponent(text), '_blank');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('name').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var type = document.getElementById('type').value.trim();
+    var budget = document.getElementById('budget').value.trim();
+    var timeline = document.getElementById('timeline').value.trim();
+    var msg = document.getElementById('message').value.trim();
+
+    var status = document.getElementById('status');
+    var sendBtn = document.getElementById('sendBtn');
+    var original = sendBtn.innerHTML;
+
+    function mark(sel){
+      var el = document.querySelector(sel);
+      if(el){ el.focus(); el.style.boxShadow='0 0 0 4px rgba(191,57,42,.20)'; el.style.borderColor='#BF392A'; }
+    }
+
+    if(!name || !email || !msg){
+      show('<strong>Almost there.</strong> Please fill in your name, email, and project description.', 'error');
+      if(!name) mark('#name');
+      else if(!email) mark('#email');
+      else mark('#message');
+      return;
+    }
+
+    function show(html, cls){
+      status.className = cls || '';
+      status.style.display = 'block';
+      status.innerHTML = html;
+    }
+
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Sending…';
+
+    var payload = {
+      name: name,
+      email: email,
+      phone: phone,
+      type: type || 'Not specified',
+      budget: budget || 'Not specified',
+      timeline: timeline || 'Not specified',
+      message: msg,
+      _subject: 'New portfolio message from ' + name,
+      _captcha: 'false'
+    };
+
+    fetch('https://formsubmit.co/ajax/bekhaleddjilali0@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(r){ return r.json().catch(function(){ return {}; }); })
+    .then(function(data){
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = original;
+      if (data.success) {
+        show('<strong>Message sent!</strong> Thanks ' + name + '. Djillali will reply to your email (' + email + ') shortly.', 'ok');
+        form.reset();
+      } else {
+        show('<strong>Could not send.</strong> Please reach Djillali directly via WhatsApp: ' +
+             '<a href="https://wa.me/' + number + '" target="_blank" style="color:#128C7E;font-weight:600;text-decoration:underline;">Open WhatsApp</a>', 'error');
+      }
+    })
+    .catch(function(err){
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = original;
+      show('<strong>Something went wrong.</strong> Please send your message directly on WhatsApp: ' +
+           '<a href="https://wa.me/' + number + '" target="_blank" style="color:#128C7E;font-weight:600;text-decoration:underline;">Click here</a>', 'error');
+    });
+  });
+
+  document.getElementById('waPlain').addEventListener('click', function(){
+    var name = document.getElementById('name').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var type = document.getElementById('type').value.trim();
+    var budget = document.getElementById('budget').value.trim();
+    var timeline = document.getElementById('timeline').value.trim();
+    var msg = document.getElementById('message').value.trim();
+    var lines = ['Hello Djillali, I\'d like to start a project with you.'];
+    if(name) lines.push('Name: ' + name);
+    if(type) lines.push('I need: ' + type);
+    if(budget) lines.push('Budget: ' + budget);
+    if(timeline) lines.push('Timeline: ' + timeline);
+    if(msg) lines.push('Message: ' + msg);
+    if(phone) lines.push('Phone/WhatsApp: ' + phone);
+    if(email) lines.push('Email: ' + email);
+    openWa(lines.join('\n'));
+  });
+
+  /* offers entrance */
+  var sceneEl = document.getElementById('offScene');
+  if (sceneEl && 'IntersectionObserver' in window) {
+    var osc = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) { if (en.isIntersecting) { sceneEl.classList.add('inview'); osc.disconnect(); } });
+    }, { threshold: 0.25 });
+    osc.observe(sceneEl);
+  }
+</script>
+
+<!-- animated CTA (ripple + confetti + press) -->
+<script>
+  (function () {
+    function dq(scope, sel) { return Array.prototype.slice.call(scope.querySelectorAll(sel)); }
+    dq(document, '[data-bt]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        if (btn.dataset.lock) { e.preventDefault(); return; }
+        var r = btn.getBoundingClientRect();
+        var rip = btn.querySelector('.bt-rip');
+        if (rip) {
+          var px = e.clientX - r.left, py = e.clientY - r.top;
+          var size = Math.max(r.width, r.height) * 2.2;
+          rip.style.cssText = 'left:' + px + 'px;top:' + py + 'px;width:' + size + 'px;height:' + size + 'px;margin:-' + (size / 2) + 'px 0 0 -' + (size / 2) + 'px;';
+          rip.classList.remove('go'); void rip.offsetWidth; rip.classList.add('go');
+        }
+        btn.dataset.lock = '1';
+        btn.style.transition = 'transform .22s cubic-bezier(.2,.7,.3,1)';
+        btn.style.transform = 'translateY(2px) scale(.97)';
+        e.preventDefault();
+        setTimeout(function () {
+          var target = (btn.getAttribute('href') || '#contactForm').trim();
+          if (target.charAt(0) === '#') {
+            var el = document.querySelector(target);
+            if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            setTimeout(function () { btn.dataset.lock = ''; }, 600);
+          } else { window.location.href = target; }
+        }, 260);
+      });
+    });
+
+    var st = document.createElement('style');
+    st.textContent =
+      '.bt-rip.go{animation:btRip .5s ease-out forwards;}' +
+      '@keyframes btRip{0%{transform:scale(0);opacity:.8;}100%{transform:scale(1);opacity:0;}}';
+    document.head.appendChild(st);
+  })();
+</script>
+<!-- Currency toggle: switch offer prices between DA / USD / EUR -->
+<script>
+  (function () {
+    var PRICES = { landing: { DA: 5000, USD: 30, EUR: 28 }, website: { DA: 7500, USD: 45, EUR: 42 } };
+    var SYM = { DA: 'DA', USD: '$', EUR: '€' };
+    var active = 'USD';
+    var toggles = document.querySelectorAll('.currency-toggle');
+    var cards = document.querySelectorAll('[data-off-card]');
+    function fmt(n) { return n.toLocaleString('en-US').replace(/,/g, ' '); }
+    function applyCurrency(ccy, animate) {
+      active = ccy;
+      toggles.forEach(function (tg) {
+        tg.querySelectorAll('.cur-btn').forEach(function (b) {
+          b.classList.toggle('is-active', b.getAttribute('data-ccy') === ccy);
+        });
+      });
+      cards.forEach(function (c) {
+        var key = c.getAttribute('data-off-card');
+        if (!PRICES[key]) return;
+        var price = c.querySelector('.off-price');
+        var cur = price.querySelector('.cur');
+        var amt = price.querySelector('.amt');
+        if (animate) price.classList.add('flip');
+        setTimeout(function () {
+          cur.textContent = SYM[ccy];
+          amt.textContent = fmt(PRICES[key][ccy]);
+        }, animate ? 120 : 0);
+        setTimeout(function () { if (animate) price.classList.remove('flip'); }, 360);
+      });
+    }
+    toggles.forEach(function (tg) {
+      tg.querySelectorAll('.cur-btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          applyCurrency(b.getAttribute('data-ccy'), true);
+        });
+      });
+    });
+    applyCurrency('USD', false);
+  })();
+</script>
+<!-- Returning to the portfolio: skip its preloader -->
+<script>
+  (function () {
+    var portfolioLinks = document.querySelectorAll('a[href="index-magic-bento.html"]');
+    portfolioLinks.forEach(function (a) {
+      a.addEventListener('click', function () {
+        try { sessionStorage.setItem('returnToPortfolio', '1'); } catch (e) {}
+      });
+    });
+  })();
+</script>
+<!-- i18n: EN / FR / AR language switcher (starts in English) -->
+<script>
+  (function () {
+    var D = {
+      'back': { en: 'Back to portfolio', fr: 'Retour au portfolio', ar: 'العودة إلى المعرض' },
+      'hero.eyebrow': { en: 'Let\'s work together', fr: 'Travaillons ensemble', ar: 'لنعمل معاً' },
+      'hero.title': { en: 'Start a Project', fr: 'Démarrer un projet', ar: 'ابدأ مشروعاً' },
+      'hero.sub': { en: 'Tell me a little about what you\'re building. Drop your details and the idea — I\'ll get back to you quickly.', fr: 'Parlez-moi un peu de votre projet. Envoyez vos coordonnées et votre idée — je vous répondrai rapidement.', ar: 'أخبرني قليلاً عمّا تبنيه. أرسل تفاصيلك وفكرتك — سأعود إليك بسرعة.' },
+      'side.title': { en: 'Talk direct', fr: 'Contact direct', ar: 'تحدث مباشرة' },
+      'side.sub': { en: 'Prefer a quick chat? Reach me on WhatsApp or email and I\'ll reply as soon as I can.', fr: 'Vous préférez discuter rapidement ? Rejoignez-moi sur WhatsApp ou par e-mail et je vous répondrai dès que possible.', ar: 'تفضّل محادثة سريعة؟ تواصل معي عبر واتساب أو البريد وسأرد في أقرب وقت.' },
+      'side.wa': { en: 'WhatsApp', fr: 'WhatsApp', ar: 'واتساب' },
+      'side.wa.sub': { en: 'Fastest reply', fr: 'Réponse la plus rapide', ar: 'أسرع رد' },
+      'side.email.sub': { en: 'For detailed briefs', fr: 'Pour les demandes détaillées', ar: 'للتفاصيل الدقيقة' },
+      'side.call.sub': { en: 'Call me', fr: 'Appelez-moi', ar: 'اتصل بي' },
+      'side.note': { en: 'Your details stay between us — I only use them to reply to your project.', fr: 'Vos informations restent entre nous — je ne les utilise que pour répondre à votre projet.', ar: 'تظل معلوماتك بيننا — أستخدمها فقط للرد على مشروعك.' },
+      'form.title': { en: 'Fill in the form', fr: 'Remplissez le formulaire', ar: 'املأ النموذج' },
+      'form.lead': { en: 'What would you like built or imagined?', fr: 'Que souhaitez-vous construire ou imaginer ?', ar: 'ماذا تريد أن نبنيه؟' },
+      'l.name': { en: 'Your name', fr: 'Votre nom', ar: 'اسمك' },
+      'l.phone': { en: 'Phone / WhatsApp', fr: 'Téléphone / WhatsApp', ar: 'الهاتف / واتساب' },
+      'l.email': { en: 'Email', fr: 'E-mail', ar: 'البريد الإلكتروني' },
+      'l.type': { en: 'What do you need?', fr: 'De quoi avez-vous besoin ?', ar: 'ماذا تحتاج؟' },
+      'l.budget': { en: 'Budget range', fr: 'Budget estimé', ar: 'الميزانية' },
+      'l.timeline': { en: 'Timeline', fr: 'Délai', ar: 'المدة الزمنية' },
+      'l.message': { en: 'Describe your project', fr: 'Décrivez votre projet', ar: 'صف مشروعك' },
+      'ph.name': { en: 'e.g. Amine', fr: 'ex. Amine', ar: 'مثال: أمين' },
+      'ph.phone': { en: 'e.g. 0555 00 00 00', fr: 'ex. 0555 00 00 00', ar: 'مثال: 0555 00 00 00' },
+      'ph.email': { en: 'you@example.com', fr: 'vous@exemple.com', ar: 'you@example.com' },
+      'ph.timeline': { en: 'e.g. within a month, flexible, ASAP…', fr: 'ex. d\'ici un mois, flexible, urgent…', ar: 'مثال: خلال شهر، مرن، عاجل…' },
+      'ph.message': { en: 'Tell me about your idea, the goal, the vibe you\'re after, timelines…', fr: 'Parlez-moi de votre idée, de l\'objectif, de l\'ambiance recherchée, des délais…', ar: 'أخبرني عن فكرتك، الهدف، الأجواء التي تريدها، والمدة…' },
+      'hint.budget': { en: 'Clientele in Algeria? Prices in dinars (DA) + bank transfer (RIB). International: USD + arranged via WhatsApp.', fr: 'Clients en Algérie ? Prix en dinars (DA) + virement bancaire (RIB). International : USD + convenu via WhatsApp.', ar: 'عملاء في الجزائر؟ الأسعار بالدينار (دج) + تحويل بنكي (RIB). عالمياً: دولار + الترتيب عبر واتساب.' },
+      'hint.message': { en: 'The more detail, the better the first reply.', fr: 'Plus il y a de détails, meilleure sera la première réponse.', ar: 'كلما زادت التفاصيل كانت أول إجابة أفضل.' },
+      'opt.notSure': { en: 'Not sure yet', fr: 'Pas encore sûr', ar: 'لست متأكداً بعد' },
+      'opt.other': { en: 'Other', fr: 'Autre', ar: 'آخر' },
+      'opt.newWebsite': { en: 'New website', fr: 'Nouveau site', ar: 'موقع جديد' },
+      'opt.landing': { en: 'Landing page', fr: 'Landing page', ar: 'صفحة هبوط' },
+      'opt.select': { en: 'Choose one…', fr: 'Choisissez…', ar: 'اختر…' },
+      'opt.budgetSelect': { en: 'Select…', fr: 'Sélectionner…', ar: 'اختر…' },
+      'submit': { en: 'Send Message', fr: 'Envoyer le message', ar: 'أرسل الرسالة' },
+      'waAlt': { en: 'WhatsApp instead', fr: 'Via WhatsApp plutôt', ar: 'عبر واتساب بدلاً من ذلك' },
+      'privacy': { en: 'Your message is emailed to Djillali securely — I only use it to reply to your project. Prefer chat instead? Use the WhatsApp button.', fr: 'Votre message est envoyé par e-mail à Djillali en toute sécurité — je ne l\'utilise que pour répondre à votre projet. Vous préférez discuter ? Utilisez le bouton WhatsApp.', ar: 'تُرسل رسالتك إلى جيلالي بأمان — أستخدمها فقط للرد على مشروعك. تفضّل المحادثة؟ استخدم زر واتساب.' },
+      'off.secHead.sub': { en: 'I design and build websites — that\'s the craft. Flat pricing, no surprises.', fr: 'Je conçois et développe des sites web — c\'est mon métier. Un prix fixe, aucune surprise.', ar: 'أصمّم وأبني المواقع — هذه هي حرفتي. سعر ثابت وبدون مفاجآت.' },
+      'off.head.title': { en: 'Two clear offers', fr: 'Deux offres claires', ar: 'عرضان واضحان' },
+      'off.head.eyebrow': { en: 'Pricing', fr: 'Tarifs', ar: 'الأسعار' },
+      'off.landing.name': { en: 'One page', fr: 'Une page', ar: 'صفحة واحدة' },
+      'off.landing.title': { en: 'Landing Page', fr: 'Landing Page', ar: 'صفحة هبوط' },
+      'off.landing.f1': { en: 'Designed & built from scratch', fr: 'Conçu et développé de zéro', ar: 'تصميم وبناء من الصفر' },
+      'off.landing.f2': { en: 'Responsive on every device', fr: 'Responsive sur tous les appareils', ar: 'متجاوب مع كل الأجهزة' },
+      'off.landing.f3': { en: 'A single, focused goal', fr: 'Un objectif unique et ciblé', ar: 'هدف واحد ومركّز' },
+      'off.landing.btn': { en: 'Start a page', fr: 'Démarrer une page', ar: 'ابدأ صفحة' },
+      'off.website.badge': { en: 'Popular', fr: 'Populaire', ar: 'الأكثر طلباً' },
+      'off.website.name': { en: 'Design & build', fr: 'Design & développement', ar: 'تصميم وبناء' },
+      'off.website.title': { en: 'New Website', fr: 'Nouveau site', ar: 'موقع جديد' },
+      'off.website.f1': { en: 'Full site designed & built', fr: 'Site complet conçu et développé', ar: 'موقع كامل تصميم وبناء' },
+      'off.website.f2': { en: 'Multiple pages, cohesive look', fr: 'Plusieurs pages, un style cohérent', ar: 'عدة صفحات بنمط متناسق' },
+      'off.website.f3': { en: 'Ready to go live', fr: 'Prêt à être mis en ligne', ar: 'جاهز للنشر' },
+      'off.website.btn': { en: 'Build my website', fr: 'Construire mon site', ar: 'ابنِ موقعي' },
+      'off.per': { en: '/ project', fr: '/ projet', ar: '/ مشروع' }
+    };
+
+    var LANG = 'en';
+    try { LANG = (localStorage.getItem('siteLang') === 'fr' || localStorage.getItem('siteLang') === 'ar') ? localStorage.getItem('siteLang') : 'en'; } catch (e) {}
+
+    var MAP = [
+      ['.hero .eyebrow', 'hero.eyebrow'],
+      ['.hero h1', 'hero.title'],
+      ['.hero p.sub', 'hero.sub'],
+      ['.side h3', 'side.title'],
+      ['.side > p', 'side.sub'],
+      ['.side a:nth-of-type(1) span', null],
+      ['.side .quick a span', null]
+    ];
+    function T(sel, text) {
+      var el = document.querySelector(sel);
+      if (el) el.textContent = text;
+    }
+    function apply() {
+      var root = document.documentElement;
+      root.lang = LANG; root.setAttribute('dir', LANG === 'ar' ? 'rtl' : 'ltr');
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        var k = el.getAttribute('data-i18n');
+        if (D[k]) el.textContent = D[k][LANG];
+      });
+      // structured translations via selector map
+      T('.hero .eyebrow', D['hero.eyebrow'][LANG]);
+      T('.hero h1', D['hero.title'][LANG]);
+      T('.hero p.sub', D['hero.sub'][LANG]);
+      T('.side h3', D['side.title'][LANG]);
+      T('.side .intro p, .side > p', D['side.sub'][LANG]);
+      T('.form-title, #contactForm .font-serif', D['form.title'][LANG]);
+      T('#contactForm .lead', D['form.lead'][LANG]);
+      // sidebar quick rows
+      var q = document.querySelectorAll('.quick a');
+      if (q.length >= 2) { q[0].querySelector('span').childNodes[0].nodeValue = D['side.wa'][LANG]; }
+      // phone small
+      var call = document.querySelector('.quick a[href^="tel"] span small'); if (call) call.textContent = D['side.call.sub'][LANG];
+      // labels
+      var lab = {
+        'name': 'l.name', 'phone': 'l.phone', 'email': 'l.email', 'type': 'l.type',
+        'budget': 'l.budget', 'timeline': 'l.timeline', 'message': 'l.message'
+      };
+      for (var id in lab) {
+        var l = document.querySelector('label[for="' + id + '"]');
+        if (l) l.childNodes[0].nodeValue = D[lab[id]][LANG] + ' ';
+      }
+      // placeholders
+      var ph = { 'name': 'ph.name', 'phone': 'ph.phone', 'email': 'ph.email', 'timeline': 'ph.timeline', 'message': 'ph.message' };
+      for (var pid in ph) {
+        var p = document.getElementById(pid);
+        if (p) p.placeholder = D[ph[pid]][LANG];
+      }
+      // hints
+      var hBudget = document.querySelector('.field label[for="budget"] ~ .hint'); if (hBudget) hBudget.textContent = D['hint.budget'][LANG];
+      var hMsg = document.querySelector('.field label[for="message"] ~ .hint'); if (hMsg) hMsg.textContent = D['hint.message'][LANG];
+      // submit + wa
+      var sb = document.getElementById('sendBtn'); if (sb) sb.childNodes[0].nodeValue = D['submit'][LANG] + ' ';
+      var wa = document.getElementById('waPlain'); if (wa) wa.childNodes[wa.childNodes.length-1].nodeValue = D['waAlt'][LANG];
+      var prv = document.querySelector('.privacy'); if (prv) prv.textContent = D['privacy'][LANG];
+      // offers header
+      var oe = document.querySelector('.offers .eyebrow'); if (oe) oe.textContent = D['off.head.eyebrow'][LANG];
+      var ot = document.querySelector('.offers h2'); if (ot) ot.textContent = D['off.head.title'][LANG];
+      var osub = document.querySelector('.offers .sec-head p'); if (osub) osub.textContent = D['off.secHead.sub'][LANG];
+      // offers cards texts
+      document.querySelectorAll('.offers [data-off-card]').forEach(function (c) {
+        var key = c.getAttribute('data-off-card');
+        c.querySelector('.off-name').textContent = D['off.' + key + '.name'][LANG];
+        c.querySelector('.off-title').textContent = D['off.' + key + '.title'][LANG];
+        var f = c.querySelectorAll('.off-feats li');
+        for (var i = 0; i < f.length && i < 3; i++) { var sp=f[i].querySelector('span'); if(sp)sp.textContent = D['off.' + key + '.f' + (i + 1)][LANG]; else f[i].childNodes[f[i].childNodes.length-1].nodeValue = D['off.'+key+'.f'+(i+1)][LANG]; }
+        var per = c.querySelector('.off-price .per'); if (per) per.textContent = D['off.per'][LANG];
+        var txt = c.querySelector('.bt-txt'); if (txt) txt.textContent = D['off.' + key + '.btn'][LANG];
+        if (key === 'website') { var bd = c.querySelector('.off-badge'); if (bd) { var bdt = bd.querySelector('span'); if (bdt) bdt.textContent = D['off.website.badge'][LANG]; else bd.childNodes[bd.childNodes.length-1].nodeValue = D['off.website.badge'][LANG]; } }
+      });
+      document.querySelectorAll('.lang-btn').forEach(function (b) { b.classList.toggle('is-active', b.getAttribute('data-lang') === LANG); });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        LANG = b.getAttribute('data-lang');
+        try { localStorage.setItem('siteLang', LANG); } catch (e) {}
+        apply();
+      });
+    });
+
+    apply();
+  })();
+</script>
+</body>
+</html>
