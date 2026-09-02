@@ -371,6 +371,64 @@
   .kb-head p{color:rgba(244,241,234,0.6);max-width:460px;margin:0 auto;}
   .kb-stage{max-width:920px;margin:0 auto;padding:0 16px;}
   .kb-wrap{width:100%;overflow-x:auto;padding:18px 8px 6px;}
+
+  /* ===== Retro device cabinet frame around the interface ===== */
+  .kb-cabinet{
+    position:relative;max-width:980px;margin:0 auto;
+    padding:20px 20px 8px;
+    border-radius:22px;
+    background:linear-gradient(180deg,#2b2620,#1b1713);
+    border:1px solid rgba(227,201,138,.20);
+    box-shadow:0 40px 80px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08), 0 0 0 1px rgba(0,0,0,.6);
+  }
+  .kb-bar{
+    display:flex;align-items:center;gap:10px;
+    padding:0 6px 14px;
+    font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:rgba(227,201,138,.85);
+  }
+  .kb-led{
+    width:9px;height:9px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #ffe9a8, #e3c98a 55%, #9c7e3a);
+    box-shadow:0 0 10px 2px rgba(227,201,138,.8), 0 0 2px rgba(0,0,0,.6);
+    animation:kbPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes kbPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+  .kb-bar-txt{flex:1;text-align:left;font-family:'Inter',sans-serif;}
+  .kb-clock{
+    font-family:'Fraunces',serif;font-size:11px;letter-spacing:.14em;
+    color:rgba(244,241,234,.75);font-variant-numeric:tabular-nums;
+  }
+  .kb-corner{position:absolute;width:20px;height:20px;border-color:#e3c98a;border-style:solid;opacity:.85;pointer-events:none;}
+  .kb-corner--tl{top:-1px;left:-1px;border-width:2px 0 0 2px;border-top-left-radius:10px;}
+  .kb-corner--tr{top:-1px;right:-1px;border-width:2px 2px 0 0;border-top-right-radius:10px;}
+  .kb-corner--bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;border-bottom-left-radius:10px;}
+  .kb-corner--br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;border-bottom-right-radius:10px;}
+  .kb-scan{
+    position:absolute;left:0;right:0;top:0;bottom:0;border-radius:22px;overflow:hidden;pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay;opacity:.5;
+  }
+  .kb-amb{
+    position:absolute;left:-40%;right:-40%;top:0;height:180%;
+    pointer-events:none;
+    background:radial-gradient(ellipse at 50% 0%, rgba(227,201,138,.15), transparent 60%);
+    opacity:.6;
+  }
+  .kb-cabinet:hover{box-shadow:0 44px 90px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.09), 0 0 34px rgba(227,201,138,.12);}
+  /* key interaction glow on press */
+  .kb-key.pressed{
+    transform:translateY(3px) scale(.985);
+    box-shadow:0 0 0 #b9a887, 0 2px 4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.5), 0 0 14px rgba(227,201,138,.55);
+    background:linear-gradient(180deg,#f6ecd9,#eedfbf);
+    color:#14110c;
+  }
+  @media(max-width:640px){
+    .kb-cabinet{padding:14px 10px 4px;border-radius:16px;}
+    .kb-bar{padding:0 4px 10px;font-size:8px;letter-spacing:.1em;}
+    .kb-clock{font-size:10px;}
+    .kb-corner{width:14px;height:14px;}
+  }
   .kb-body{
     width:100%;min-width:760px;
     background:linear-gradient(180deg,#2f2a24,#221e19);
@@ -427,6 +485,7 @@
   }
 
   .kb-output{
+    position:relative;
     max-width:920px;margin:0 auto 26px;padding:18px 22px;
     background:rgba(0,0,0,.35);
     border:1px solid rgba(255,255,255,.10);
@@ -1054,11 +1113,23 @@
       <h2 class="font-serif" data-i18n="tryit.title">Start Typing on the Vintage Keys</h2>
       <p data-i18n="tryit.sub">This keyboard is live — press any key and watch it light up while you type below.</p>
     </div>
-    <div class="kb-output">
-      <div class="kb-print" id="kbPrint" aria-live="polite">
-        <span class="kb-caret"></span>
+    <div class="kb-cabinet">
+      <div class="kb-bar">
+        <span class="kb-led"></span>
+        <span class="kb-bar-txt">SYS.ACTIVE — TYPE / CLICK / EXPLORE</span>
+        <span class="kb-clock" id="kbClock">00:00:00</span>
       </div>
-    </div>
+      <span class="kb-corner kb-corner--tl"></span>
+      <span class="kb-corner kb-corner--tr"></span>
+      <span class="kb-corner kb-corner--bl"></span>
+      <span class="kb-corner kb-corner--br"></span>
+      <span class="kb-scan"></span>
+      <span class="kb-amb"></span>
+      <div class="kb-output">
+        <div class="kb-print" id="kbPrint" aria-live="polite">
+          <span class="kb-caret"></span>
+        </div>
+      </div>
     <div class="kb-stage">
       <div class="kb-wrap">
         <div class="kb-body" id="kbBody">
@@ -1136,6 +1207,7 @@
         </div>
       </div>
       <p class="kb-foot">Start typing â€” your message appears above the keys.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -3384,6 +3456,21 @@ if (reduce) {
         }
       });
     }
+  })();
+</script>
+
+<script>
+  /* Retro cabinet clock (keyboard frame) */
+  (function () {
+    var clk = document.getElementById('kbClock');
+    if (!clk) return;
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function draw() {
+      var d = new Date();
+      clk.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+    draw();
+    setInterval(draw, 1000);
   })();
 </script>
 
