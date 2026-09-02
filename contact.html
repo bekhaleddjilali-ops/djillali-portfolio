@@ -721,12 +721,13 @@
 <!-- Returning to the portfolio: skip its preloader -->
 <script>
   (function () {
+    function mark() { try { sessionStorage.setItem('returnToPortfolio', '1'); } catch (e) {} }
     var portfolioLinks = document.querySelectorAll('a[href="index-magic-bento.html"]');
     portfolioLinks.forEach(function (a) {
-      a.addEventListener('click', function () {
-        try { sessionStorage.setItem('returnToPortfolio', '1'); } catch (e) {}
-      });
+      a.addEventListener('click', mark);
     });
+    // Also mark when leaving so the browser back button skips the portfolio preloader too.
+    window.addEventListener('pagehide', mark);
   })();
 </script>
 <!-- i18n: EN / FR / AR language switcher (starts in English) -->
