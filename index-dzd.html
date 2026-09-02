@@ -111,15 +111,14 @@
   .ccp-badge svg{width:13px;height:13px;}
   .ccp-card h3{font-family:'Fraunces',serif;font-size:26px;font-weight:500;margin-bottom:6px;}
   .ccp-card p{color:var(--muted);font-size:15px;max-width:540px;margin:0 auto 22px;}
-  .ccp-num{
-    font-family:'Fraunces',serif;font-size:clamp(22px,5.5vw,30px);font-weight:600;
-    letter-spacing:.02em;color:var(--charcoal);background:var(--linen);
-    border:1px dashed var(--primary);border-radius:14px;padding:14px 20px;
-    display:inline-block;margin-bottom:8px;-webkit-user-select:all;user-select:all;
-    line-height:1.4;max-width:100%;overflow-wrap:break-word;
+  .ccp-cta{margin:4px 0 6px;}
+  .ccp-cta a{
+    display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:600;
+    color:#fff;background:var(--dzd);padding:13px 24px;border-radius:999px;
+    text-decoration:none;letter-spacing:.02em;
+    box-shadow:0 14px 28px -14px rgba(34,29,24,.5);transition:transform .2s ease, box-shadow .2s ease;
   }
-  .ccp-titulaire{font-size:14px;color:var(--muted);}
-  .ccp-titulaire strong{color:var(--charcoal);}
+  .ccp-cta a:hover{transform:translateY(-1px);box-shadow:0 18px 34px -16px rgba(34,29,24,.55);}
   .ccp-steps{list-style:none;display:grid;gap:10px;text-align:left;max-width:460px;margin:24px auto 0;}
   .ccp-steps li{display:flex;gap:12px;font-size:14px;color:var(--foreground);}
   .ccp-steps li b{color:var(--primary);font-family:'Fraunces',serif;font-size:16px;min-width:22px;}
@@ -209,7 +208,7 @@
     </div>
   </section>
 
-<!-- Bank RIB payment block -->
+<!-- Payment block (RIB kept PRIVATE - sent by WhatsApp only) -->
   <section class="ccp wrap">
     <div class="ccp-card">
       <span class="ccp-badge">
@@ -217,17 +216,18 @@
         Paiement par virement
       </span>
       <h3>Comment me régler</h3>
-      <p>Après confirmation sur WhatsApp, vous effectuez le virement vers mon compte bancaire (RIB) ci-dessous, puis vous m'envoyez une capture. Je commence dès réception du paiement.</p>
-      <div class="ccp-num">032 / 00209 / 4688331208 / 97</div>
-      <div class="ccp-titulaire">Titulaire : <strong>BENKHEDDA DJILLALI</strong></div>
-      <p class="ccp-note">Votre virement est sécurisé — ce RIB sert uniquement à <strong>recevoir</strong> votre paiement. Aucune donnée sensible n'est demandée.</p>
+      <p>Après confirmation sur WhatsApp, je vous envoie mes coordonnées bancaires (RIB) <strong>en privé</strong>. Vous effectuez le virement, puis vous m'envoyez la capture. Je commence dès réception du paiement.</p>
+      <div class="ccp-cta">
+        <a href="https://wa.me/213665977002?text=Salam%20Djillali!%20Je%20confirme%20mon%20projet.%20Pouvez-vous%20m%27envoyer%20votre%20RIB%20en%20priv%C3%A9%C2%A0%3F" target="_blank" rel="noopener">Demander le RIB en privé</a>
+      </div>
+      <p class="ccp-note">Vos coordonnées bancaires sont <strong>protégées</strong> : elles ne sont jamais affichées sur ce site. Je vous les transmets uniquement dans notre conversation WhatsApp.</p>
       <ol class="ccp-steps">
         <li><b>1</b><span>Je vous envoie la fiche de projet à confirmer sur WhatsApp.</span></li>
-        <li><b>2</b><span>Vous virez le montant avec le RIB ci-dessus.</span></li>
-        <li><b>3</b><span>Vous m'envoyez le reçu de virement par WhatsApp.</span></li>
+        <li><b>2</b><span>Je vous envoie mon RIB en privé sur WhatsApp.</span></li>
+        <li><b>3</b><span>Vous virez le montant et m'envoyez le reçu par WhatsApp.</span></li>
         <li><b>4</b><span>Je construis votre site et je vous le livre terminé.</span></li>
       </ol>
-      <p class="ccp-note">Confirmez toujours le RIB dans la conversation WhatsApp avant de virer.</p>
+      <p class="ccp-note">Vérifiez toujours le RIB dans la conversation WhatsApp avant de virer.</p>
     </div>
   </section>
 
@@ -236,7 +236,7 @@
       <h2>Comment ça se passe</h2>
       <div class="step"><div class="n">1</div><div><h4>Vous choisissez une offre</h4><p>Une landing page pour se présenter, ou un site complet.</p></div></div>
       <div class="step"><div class="n">2</div><div><h4>On discute sur WhatsApp</h4><p>Je pose 2–3 questions sur votre activité et je confirme le projet.</p></div></div>
-      <div class="step"><div class="n">3</div><div><h4>Vous payez par virement</h4><p>Virement vers mon RIB, je reçois le reçu et je démarre.</p></div></div>
+      <div class="step"><div class="n">3</div><div><h4>Vous payez par virement</h4><p>Je vous envoie mon RIB en privé, je reçois le reçu et je démarre.</p></div></div>
       <div class="step"><div class="n">4</div><div><h4>Je livre votre site</h4><p>Un site prêt, adapté au téléphone, prêt à être mis en ligne.</p></div></div>
     </div>
   </section>
