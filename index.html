@@ -539,16 +539,76 @@
   .ripple-head h2{font-family:'Fraunces',serif;font-size:32px;color:#fff;margin-bottom:14px;}
   @media(min-width:640px){.ripple-head h2{font-size:42px;}}
   .ripple-head p{color:rgba(244,241,234,0.6);max-width:440px;margin:0 auto;}
-  .ripple-frame{position:relative;width:100%;height:64vh;min-height:380px;max-height:620px;overflow:hidden;}
-  .ripple-mount{position:absolute;inset:0;}
+  .ripple-frame{position:relative;width:100%;height:64vh;min-height:380px;max-height:620px;overflow:hidden;border-radius:20px;box-shadow:0 40px 90px rgba(0,0,0,.6), inset 0 0 0 1px rgba(227,201,138,.25), 0 0 0 1px rgba(0,0,0,.4);}
+  .ripple-mount{position:absolute;inset:0;z-index:1;}
   .ripple-mount canvas{width:100%;height:100%;display:block;}
-  .ripple-hint{
-    position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
-    display:flex;align-items:center;gap:8px;pointer-events:none;
-    font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.55);
-    opacity:0;transition:opacity .4s ease;
+  /* atmospheric color wash - slowly drifting aurora over the water */
+  .rp-aura{
+    position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;
+    background:
+      radial-gradient(120% 80% at 18% 20%, rgba(227,201,138,.28), transparent 55%),
+      radial-gradient(120% 80% at 82% 78%, rgba(169,116,79,.32), transparent 55%),
+      radial-gradient(90% 60% at 50% 10%, rgba(120,160,205,.18), transparent 60%);
+    animation:rpAura 14s ease-in-out infinite alternate;
   }
-  .ripple-frame:hover .ripple-hint{opacity:0;}
+  @keyframes rpAura{
+    0%{transform:translate3d(-2%,-1%,0) scale(1);opacity:.75;filter:hue-rotate(0deg);}
+    100%{transform:translate3d(2%,2%,0) scale(1.08);opacity:1;filter:hue-rotate(-8deg);}
+  }
+  /* glass sheen sweep */
+  .rp-sheen{
+    position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.5;
+    background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.16) 46%, rgba(255,255,255,.05) 52%, transparent 64%);
+    background-size:250% 250%;animation:rpSheen 9s ease-in-out infinite;
+  }
+  @keyframes rpSheen{0%{background-position:0% 0%}50%{background-position:100% 100%}100%{background-position:0% 0%}}
+  /* soft vignette for depth */
+  .rp-vin{
+    position:absolute;inset:0;z-index:4;pointer-events:none;
+    background:radial-gradient(100% 100% at 50% 45%, transparent 55%, rgba(8,6,3,.55) 100%);
+  }
+  /* pointer light - follows the cursor with a smooth trail */
+  .rp-glow{
+    position:absolute;left:0;top:0;width:220px;height:220px;border-radius:50%;z-index:5;pointer-events:none;opacity:0;
+    background:radial-gradient(circle, rgba(227,201,138,.5), rgba(227,201,138,.16) 45%, transparent 72%);
+    mix-blend-mode:screen;transform:translate(-50%,-50%);
+    transition:opacity .4s ease;
+  }
+  .ripple-frame:hover .rp-glow,.ripple-frame:focus-within .rp-glow{opacity:1;}
+  /* floating light particles */
+  .rp-spark{
+    position:absolute;z-index:4;pointer-events:none;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,241,205,.95), rgba(227,201,138,.2) 60%, transparent);
+    opacity:.0;animation:rpFloat linear infinite;
+  }
+  .rp-spark--1{width:5px;height:5px;left:12%;top:20%;animation-duration:9s;animation-delay:0s;}
+  .rp-spark--2{width:3px;height:3px;left:30%;top:70%;animation-duration:11s;animation-delay:1.4s;}
+  .rp-spark--3{width:4px;height:4px;left:55%;top:35%;animation-duration:10s;animation-delay:2.6s;}
+  .rp-spark--4{width:3px;height:3px;left:74%;top:62%;animation-duration:12s;animation-delay:0.8s;}
+  .rp-spark--5{width:5px;height:5px;left:88%;top:25%;animation-duration:8.5s;animation-delay:3s;}
+  @keyframes rpFloat{
+    0%{transform:translateY(40px);opacity:0;}
+    18%{opacity:.9;}
+    60%{opacity:.35;}
+    100%{transform:translateY(-120px);opacity:0;}
+  }
+  /* interactive hint - floating pill with radar ping */
+  .ripple-hint{
+    position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:6;
+    display:flex;align-items:center;gap:9px;pointer-events:none;
+    padding:9px 16px;border-radius:40px;
+    font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.85);
+    background:rgba(20,16,11,.5);border:1px solid rgba(227,201,138,.3);
+    backdrop-filter:blur(4px);box-shadow:0 10px 24px rgba(0,0,0,.35);
+    opacity:0;transition:opacity .4s ease, transform .4s ease;
+  }
+  .rp-ping{position:relative;width:9px;height:9px;border-radius:50%;background:#e3c98a;box-shadow:0 0 8px rgba(227,201,138,.9);flex:0 0 auto;}
+  .rp-ping::before{
+    content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(227,201,138,.5);
+    animation:rpPing 1.8s ease-out infinite;
+  }
+  @keyframes rpPing{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.8);opacity:0}}
+  .ripple-frame:hover .ripple-hint{opacity:0;transform:translateX(-50%) translateY(6px);}
   .ripple-frame:not(:hover) .ripple-hint{opacity:1;}
   @media(hover:none){.ripple-hint{opacity:1;}}
 
@@ -1365,7 +1425,17 @@
   </div>
   <div class="ripple-frame">
     <div class="ripple-mount" id="rippleMount"></div>
+    <div class="rp-aura" aria-hidden="true"></div>
+    <div class="rp-sheen" aria-hidden="true"></div>
+    <div class="rp-vin" aria-hidden="true"></div>
+    <div class="rp-glow" id="rpGlow" aria-hidden="true"></div>
+    <span class="rp-spark rp-spark--1" aria-hidden="true"></span>
+    <span class="rp-spark rp-spark--2" aria-hidden="true"></span>
+    <span class="rp-spark rp-spark--3" aria-hidden="true"></span>
+    <span class="rp-spark rp-spark--4" aria-hidden="true"></span>
+    <span class="rp-spark rp-spark--5" aria-hidden="true"></span>
     <div class="ripple-hint">
+      <span class="rp-ping" aria-hidden="true"></span>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
       Move your cursor here
     </div>
@@ -3456,6 +3526,29 @@ if (reduce) {
         }
       });
     }
+  })();
+</script>
+
+<script>
+  /* Ripple interface pointer light - smooth trailing glow */
+  (function () {
+    var glow = document.getElementById('rpGlow');
+    var frame = document.querySelector('.ripple-frame');
+    if (!glow || !frame) return;
+    var tx = 0, ty = 0, x = 0, y = 0, running = false;
+    function tick() {
+      x += (tx - x) * 0.14;
+      y += (ty - y) * 0.14;
+      glow.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%)';
+      if (running) requestAnimationFrame(tick);
+    }
+    frame.addEventListener('mousemove', function (e) {
+      var r = frame.getBoundingClientRect();
+      tx = e.clientX - r.left;
+      ty = e.clientY - r.top;
+      if (!running) { running = true; requestAnimationFrame(tick); }
+    });
+    frame.addEventListener('mouseleave', function () { running = false; });
   })();
 </script>
 
