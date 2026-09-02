@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -3050,6 +3050,15 @@ if (reduce) {
       pre.classList.add('hidden');
       return;
     }
+
+    // Revealing via back/forward cache (browser back button) => skip preloader.
+    window.addEventListener('pageshow', function (ev) {
+      if (ev.persisted || sessionStorage.getItem('returnToPortfolio') === '1') {
+        try { sessionStorage.removeItem('returnToPortfolio'); } catch (e) {}
+        document.body.classList.add('page-loaded', 'skip-preloader');
+        pre.classList.add('hidden');
+      }
+    });
 
     // reveal ~3 seconds after the page starts loading â€” no waiting on slow assets
     setTimeout(function () {
