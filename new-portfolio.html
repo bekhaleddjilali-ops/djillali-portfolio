@@ -132,7 +132,7 @@
   </div>
 
   <!-- readability scrim over the 3D gate -->
-  <div class="absolute inset-0" aria-hidden="true" style="background:radial-gradient(70% 60% at 50% 40%, rgba(11,15,23,.72), rgba(11,15,23,.42) 55%, transparent 75%);"></div>
+  <div class="absolute inset-0" aria-hidden="true" style="background:radial-gradient(55% 45% at 50% 42%, rgba(11,15,23,.5), rgba(11,15,23,.18) 55%, transparent 78%);"></div>
 
   <div class="relative z-10 max-w-3xl mx-auto text-center">
     <div class="pill reveal in text-sm text-gray-300 glass-card rounded-full px-4 py-2 mx-auto w-fit">
@@ -408,73 +408,70 @@
   }
 </script>
 
-<!-- 3D Hero Gate (Three.js) -->
+<!-- 3D Hero Scene (Three.js): torus knot + particle universe + floating cubes -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function () {
   var cvs = document.getElementById('gate3d');
   if (!cvs || !window.THREE) return;
 
-  /* ---------- scene ---------- */
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
-  camera.position.set(0, 0, 8);
+  var camera = new THREE.PerspectiveCamera(60, 1, 0.1, 200);
+  camera.position.set(0, 0.6, 9);
   var renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-  var group = new THREE.Group();
-  scene.add(group);
+  /* ---------- THE star: giant rotating torus knot ---------- */
+  var knotGeo = new THREE.TorusKnotGeometry(1.35, 0.42, 160, 20, 2, 3);
+  var knot = new THREE.Mesh(knotGeo, new THREE.MeshNormalMaterial({ flatShading: false }));
+  knot.position.set(0, 0, 0);
+  scene.add(knot);
 
-  /* ---------- portal ring / gate ---------- */
-  var ringGeo = new THREE.TorusGeometry(2.15, 0.16, 32, 90);
-  var ringMat = new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: 0.9 });
-  var ring = new THREE.Mesh(ringGeo, ringMat);
-  group.add(ring);
+  /* add a faint wireframe echo around it */
+  var wireGeo = new THREE.TorusKnotGeometry(1.6, 0.5, 120, 16, 2, 3);
+  var wire = new THREE.Mesh(wireGeo, new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.28 }));
+  scene.add(wire);
 
-  var ringGeo2 = new THREE.TorusGeometry(2.38, 0.032, 16, 90);
-  var ringMat2 = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.7 });
-  var ring2 = new THREE.Mesh(ringGeo2, ringMat2);
-  group.add(ring2);
+  /* ---------- point light on the knot (so it faces your cursor) ---------- */
+  var light = new THREE.PointLight(0x22d3ee, 1.4, 30);
+  scene.add(light);
+  var light2 = new THREE.PointLight(0x6366f1, 1.2, 30);
+  scene.add(light2);
 
-  /* ---------- inner wireframe dome (tunnel depth) ---------- */
-  var domeGeo = new THREE.IcosahedronGeometry(1.35, 1);
-  var domeMat = new THREE.MeshBasicMaterial({ color: 0xa78bfa, wireframe: true, transparent: true, opacity: 0.25 });
-  var dome = new THREE.Mesh(domeGeo, domeMat);
-  group.add(dome);
-
-  /* ---------- floating accent solid ---------- */
-  var iceGeo = new THREE.IcosahedronGeometry(0.5, 0);
-  var iceMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.5 });
-  var ice = new THREE.Mesh(iceGeo, iceMat);
-  ice.position.set(-3.4, 1.6, -0.5);
-  group.add(ice);
-
-  /* ---------- particles flowing through the gate ---------- */
-  var COUNT = 900;
-  var positions = new Float32Array(COUNT * 3);
-  for (var i = 0; i < COUNT; i++) reset(i, true);
-  function reset(i, init) {
-    var t = Math.random();
-    var hole = i % 2 === 0; // half travel a tunnel, half orbit
-    var fromFront = Math.random() < 0.5;
-    positions[i * 3] = 0;
-    positions[i * 3 + 1] = 0;
-    positions[i * 3 + 2] = init ? (fromFront ? Math.random() * 5 - 2 : Math.random() * -3) : (fromFront ? 4.5 : -3.5);
-    pT[i] = t;
-    pHole[i] = hole;
-    pFront[i] = fromFront;
+  /* ---------- dense particle tunnel ---------- */
+  var COUNT = 3500;
+  var pos = new Float32Array(COUNT * 3);
+  var seed = new Float32Array(COUNT * 3);
+  for (var i = 0; i < COUNT; i++) {
+    seed[i*3] = rand(-14, 14);
+    seed[i*3+1] = rand(-9, 9);
+    seed[i*3+2] = rand(-18, 18);
   }
-  var pT = new Float32Array(COUNT);
-  var pHole = new Float32Array(COUNT);
-  var pFront = new Float32Array(COUNT);
+  function rand(a,b){ return a + Math.random()*(b-a); }
   var pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   var pMat = new THREE.PointsMaterial({
-    color: 0x22d3ee, size: 0.045, transparent: true, opacity: 0.9,
+    color: 0x7c8cff, size: 0.045, transparent: true, opacity: 0.75,
     blending: THREE.AdditiveBlending, depthWrite: false
   });
-  var points = new THREE.Points(pGeo, pMat);
-  group.add(points);
+  var stars = new THREE.Points(pGeo, pMat);
+  scene.add(stars);
+
+  /* ---------- floating glowing cubes ---------- */
+  var cubes = [];
+  var cubeCount = 7;
+  for (var c = 0; c < cubeCount; c++) {
+    var edge = rand(0.14, 0.34);
+    var cube = new THREE.Mesh(
+      new THREE.BoxGeometry(edge, edge, edge),
+      new THREE.MeshBasicMaterial({ color: c % 2 ? 0x22d3ee : 0xa78bfa, wireframe: true, transparent: true, opacity: 0.7 })
+    );
+    cube.position.set(rand(-12, 12), rand(-6, 6), rand(-16, -2));
+    cube.userData = { rot: rand(0.4, 1.2), level: rand(0.3, 1) };
+    scene.add(cube);
+    cubes.push(cube);
+  }
 
   /* ---------- responsive ---------- */
   function resize() {
@@ -487,7 +484,7 @@
   resize();
   window.addEventListener('resize', resize);
 
-  /* ---------- mouse parallax ---------- */
+  /* ---------- mouse parallax / light follows cursor ---------- */
   var mx = 0, my = 0, tx = 0, ty = 0;
   window.addEventListener('pointermove', function (e) {
     tx = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -497,53 +494,49 @@
   /* ---------- animate ---------- */
   var clock = new THREE.Clock();
   var run = true;
+  var frame = 0;
   function animate() {
     if (!run) return;
+    requestAnimationFrame(animate);
+    frame++;
     var t = clock.getElapsedTime();
 
-    // ring + dome breathe & spin
-    ring.rotation.y += 0.003;
-    ring.rotation.x = Math.sin(t * 0.4) * 0.15;
-    ring2.rotation.y -= 0.005;
-    dome.rotation.y = t * 0.2;
-    dome.rotation.x = Math.sin(t * 0.5) * 0.4;
-    var breathe = 1 + Math.sin(t * 0.8) * 0.045;
-    ring.scale.setScalar(breathe);
-    ring2.scale.setScalar(breathe);
-    ice.rotation.y = t * 0.6;
-    ice.rotation.x = t * 0.4;
+    knot.rotation.x += 0.0035;
+    knot.rotation.y += 0.0045;
+    wire.rotation.x += 0.0015;
+    wire.rotation.y += 0.002;
 
-    // particles traverse the gate / orbit
-    var pos = pGeo.attributes.position.array;
+    // particles stream toward camera -> gives velocity/depth
+    var arr = pos;
+    var boost = 1 + Math.sin(t * 0.2) * 0.02;
     for (var i = 0; i < COUNT; i++) {
-      var speed = 1.6;
-      pT[i] += 0.0009 * speed * (pHole[i] ? 1.25 : 1);
-      if (pHole[i]) {
-        // tunnel flow through the portal
-        pos[i * 3 + 2] = pFront[i] ? 4.5 - pT[i] * 9 : -3.5 + pT[i] * 9;
-        var rad = 0.35 + 0.2 * Math.sin(i * 3.1);
-        pos[i * 3] = Math.cos(i * 2.4) * rad;
-        pos[i * 3 + 1] = Math.sin(i * 2.4) * rad;
-        if ((pFront[i] && pos[i * 3 + 2] < -3.4) || (!pFront[i] && pos[i * 3 + 2] > 4.4)) reset(i, false);
-      } else {
-        // orbital haze inside
-        var r = 0.5 + 1.7 * (0.5 + 0.5 * Math.sin(i * 7.7));
-        var ang = t * (0.3 + 0.15 * (i % 5)) + i;
-        pos[i * 3] = Math.cos(ang) * r;
-        pos[i * 3 + 1] = Math.sin(ang) * r * 0.6;
-        pos[i * 3 + 2] = Math.sin(i * 2.1) * 0.8;
-      }
+      arr[i*3]   = seed[i*3]   + Math.sin(t * 0.6 + i) * 0.4;
+      arr[i*3+1] = seed[i*3+1] + Math.cos(t * 0.5 + i * 0.5) * 0.4;
+      arr[i*3+2] = seed[i*3+2] + (t * 6 % 36) - 18;
+      if (arr[i*3+2] > 18) { seed[i*3+2] = -18; arr[i*3+2] = -18; arr[i*3] = rand(-14,14); arr[i*3+1] = rand(-9,9); }
     }
     pGeo.attributes.position.needsUpdate = true;
 
+    // cubes bob + rotate
+    for (var k = 0; k < cubes.length; k++) {
+      var c = cubes[k];
+      c.rotation.x += 0.01 * c.userData.rot;
+      c.rotation.y += 0.015 * c.userData.rot;
+      c.position.y += Math.sin(t * 0.8 + k) * 0.004 * c.userData.level;
+    }
+
     // mouse parallax
-    mx += (tx - mx) * 0.05;
-    my += (ty - my) * 0.05;
-    group.rotation.y += (mx * 0.4 - group.rotation.y) * 0.04;
-    group.rotation.x += (my * 0.3 - group.rotation.x) * 0.04;
+    mx += (tx - mx) * 0.06;
+    my += (ty - my) * 0.06;
+    knot.rotation.x += my * 0.02;
+    knot.rotation.y += mx * 0.02;
+    camera.position.x = mx * 0.6;
+    camera.position.y = 0.6 + my * 0.4;
+    camera.lookAt(scene.position);
+    light.position.set(mx * 4, my * 4, 4);
+    light2.position.set(-mx * 4, -my * 3, 5);
 
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
   }
   animate();
 
