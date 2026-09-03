@@ -128,7 +128,11 @@
     <div class="hero-glow" style="width:520px;height:520px;left:-120px;top:0;background:radial-gradient(circle,rgba(99,102,241,.4),transparent 65%)"></div>
     <div class="hero-glow" style="width:460px;height:460px;right:-100px;top:30%;background:radial-gradient(circle,rgba(34,211,238,.28),transparent 65%)"></div>
     <div class="hero-glow" style="width:420px;height:420px;left:35%;bottom:-180px;background:radial-gradient(circle,rgba(124,58,237,.25),transparent 65%)"></div>
+    <canvas id="gate3d" class="absolute inset-0 w-full h-full" aria-hidden="true"></canvas>
   </div>
+
+  <!-- readability scrim over the 3D gate -->
+  <div class="absolute inset-0" aria-hidden="true" style="background:radial-gradient(70% 60% at 50% 40%, rgba(11,15,23,.72), rgba(11,15,23,.42) 55%, transparent 75%);"></div>
 
   <div class="relative z-10 max-w-3xl mx-auto text-center">
     <div class="pill reveal in text-sm text-gray-300 glass-card rounded-full px-4 py-2 mx-auto w-fit">
@@ -402,6 +406,159 @@
       formMsg.classList.remove('hidden');
     });
   }
+</script>
+
+<!-- 3D Hero Gate (Three.js) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var cvs = document.getElementById('gate3d');
+  if (!cvs || !window.THREE) return;
+
+  /* ---------- scene ---------- */
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+  camera.position.set(0, 0, 8);
+  var renderer = new THREE.WebGLRenderer({ canvas: cvs, alpha: true, antialias: true });
+  renderer.setClearColor(0x000000, 0);
+
+  var group = new THREE.Group();
+  scene.add(group);
+
+  /* ---------- portal ring / gate ---------- */
+  var ringGeo = new THREE.TorusGeometry(2.15, 0.16, 32, 90);
+  var ringMat = new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: 0.9 });
+  var ring = new THREE.Mesh(ringGeo, ringMat);
+  group.add(ring);
+
+  var ringGeo2 = new THREE.TorusGeometry(2.38, 0.032, 16, 90);
+  var ringMat2 = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.7 });
+  var ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+  group.add(ring2);
+
+  /* ---------- inner wireframe dome (tunnel depth) ---------- */
+  var domeGeo = new THREE.IcosahedronGeometry(1.35, 1);
+  var domeMat = new THREE.MeshBasicMaterial({ color: 0xa78bfa, wireframe: true, transparent: true, opacity: 0.25 });
+  var dome = new THREE.Mesh(domeGeo, domeMat);
+  group.add(dome);
+
+  /* ---------- floating accent solid ---------- */
+  var iceGeo = new THREE.IcosahedronGeometry(0.5, 0);
+  var iceMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.5 });
+  var ice = new THREE.Mesh(iceGeo, iceMat);
+  ice.position.set(-3.4, 1.6, -0.5);
+  group.add(ice);
+
+  /* ---------- particles flowing through the gate ---------- */
+  var COUNT = 900;
+  var positions = new Float32Array(COUNT * 3);
+  for (var i = 0; i < COUNT; i++) reset(i, true);
+  function reset(i, init) {
+    var t = Math.random();
+    var hole = i % 2 === 0; // half travel a tunnel, half orbit
+    var fromFront = Math.random() < 0.5;
+    positions[i * 3] = 0;
+    positions[i * 3 + 1] = 0;
+    positions[i * 3 + 2] = init ? (fromFront ? Math.random() * 5 - 2 : Math.random() * -3) : (fromFront ? 4.5 : -3.5);
+    pT[i] = t;
+    pHole[i] = hole;
+    pFront[i] = fromFront;
+  }
+  var pT = new Float32Array(COUNT);
+  var pHole = new Float32Array(COUNT);
+  var pFront = new Float32Array(COUNT);
+  var pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  var pMat = new THREE.PointsMaterial({
+    color: 0x22d3ee, size: 0.045, transparent: true, opacity: 0.9,
+    blending: THREE.AdditiveBlending, depthWrite: false
+  });
+  var points = new THREE.Points(pGeo, pMat);
+  group.add(points);
+
+  /* ---------- responsive ---------- */
+  function resize() {
+    var w = cvs.clientWidth || 1;
+    var h = cvs.clientHeight || 1;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* ---------- mouse parallax ---------- */
+  var mx = 0, my = 0, tx = 0, ty = 0;
+  window.addEventListener('pointermove', function (e) {
+    tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    ty = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  /* ---------- animate ---------- */
+  var clock = new THREE.Clock();
+  var run = true;
+  function animate() {
+    if (!run) return;
+    var t = clock.getElapsedTime();
+
+    // ring + dome breathe & spin
+    ring.rotation.y += 0.003;
+    ring.rotation.x = Math.sin(t * 0.4) * 0.15;
+    ring2.rotation.y -= 0.005;
+    dome.rotation.y = t * 0.2;
+    dome.rotation.x = Math.sin(t * 0.5) * 0.4;
+    var breathe = 1 + Math.sin(t * 0.8) * 0.045;
+    ring.scale.setScalar(breathe);
+    ring2.scale.setScalar(breathe);
+    ice.rotation.y = t * 0.6;
+    ice.rotation.x = t * 0.4;
+
+    // particles traverse the gate / orbit
+    var pos = pGeo.attributes.position.array;
+    for (var i = 0; i < COUNT; i++) {
+      var speed = 1.6;
+      pT[i] += 0.0009 * speed * (pHole[i] ? 1.25 : 1);
+      if (pHole[i]) {
+        // tunnel flow through the portal
+        pos[i * 3 + 2] = pFront[i] ? 4.5 - pT[i] * 9 : -3.5 + pT[i] * 9;
+        var rad = 0.35 + 0.2 * Math.sin(i * 3.1);
+        pos[i * 3] = Math.cos(i * 2.4) * rad;
+        pos[i * 3 + 1] = Math.sin(i * 2.4) * rad;
+        if ((pFront[i] && pos[i * 3 + 2] < -3.4) || (!pFront[i] && pos[i * 3 + 2] > 4.4)) reset(i, false);
+      } else {
+        // orbital haze inside
+        var r = 0.5 + 1.7 * (0.5 + 0.5 * Math.sin(i * 7.7));
+        var ang = t * (0.3 + 0.15 * (i % 5)) + i;
+        pos[i * 3] = Math.cos(ang) * r;
+        pos[i * 3 + 1] = Math.sin(ang) * r * 0.6;
+        pos[i * 3 + 2] = Math.sin(i * 2.1) * 0.8;
+      }
+    }
+    pGeo.attributes.position.needsUpdate = true;
+
+    // mouse parallax
+    mx += (tx - mx) * 0.05;
+    my += (ty - my) * 0.05;
+    group.rotation.y += (mx * 0.4 - group.rotation.y) * 0.04;
+    group.rotation.x += (my * 0.3 - group.rotation.x) * 0.04;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  /* pause when hero off-screen */
+  if ('IntersectionObserver' in window) {
+    var hero = document.getElementById('top');
+    if (hero) {
+      var io = new IntersectionObserver(function (ents) {
+        run = ents[0].isIntersecting;
+        if (run) requestAnimationFrame(animate);
+      });
+      io.observe(hero);
+    }
+  }
+})();
 </script>
 </body>
 </html>
