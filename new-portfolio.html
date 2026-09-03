@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DJILLALI — Creative Web Designer</title>
+<meta name="description" content="DJILLALI designs and builds focused, modern websites. Landing pages & full sites with clean structure, thoughtful motion, and small details." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          base: '#0B0F17',
+          panel: '#111827',
+          accent: '#6366F1',
+          aqua: '#22D3EE'
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'Inter', 'sans-serif']
+        }
+      }
+    }
+  };
+</script>
+<style>
+  :root{ color-scheme: dark; }
+  html{ scroll-behavior:smooth; }
+  body{ background:#0B0F17; color:#e5e7eb; font-family:'Inter',system-ui,sans-serif; overflow-x:hidden; }
+  .font-display{ font-family:'Space Grotesk',Inter,sans-serif; }
+
+  /* gradient text */
+  .text-gradient{
+    background:linear-gradient(100deg,#a78bfa 0%,#6366f1 38%,#22d3ee 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* animated gradient border glow for cards */
+  .glass-card{
+    background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+  .glass-card:hover{ border-color:rgba(99,102,241,.45); box-shadow:0 20px 60px -20px rgba(99,102,241,.45); }
+
+  /* cursor mesh orb */
+  #mesh{
+    position:fixed; width:520px; height:520px; border-radius:9999px;
+    background:radial-gradient(circle, rgba(99,102,241,.35), rgba(34,211,238,.12) 45%, transparent 70%);
+    filter:blur(30px); pointer-events:none; z-index:0; will-change:transform;
+    transform:translate(-50%,-50%);
+    transition:transform .9s cubic-bezier(.22,.61,.36,1);
+  }
+  /* static ambient glows */
+  .hero-glow{ position:absolute; border-radius:9999px; filter:blur(70px); pointer-events:none; }
+
+  /* pill content stacking */
+  .pill{ display:inline-flex; align-items:center; gap:.5rem; }
+
+  /* reveal-on-scroll */
+  .reveal{ opacity:0; transform:translateY(28px); filter:blur(6px); transition:opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1), filter .8s cubic-bezier(.22,.61,.36,1); }
+  .reveal.in{ opacity:1; transform:none; filter:none; }
+
+  /* project image zoom + overlay */
+  .proj-media{ overflow:hidden; }
+  .proj-media img{ transition:transform .8s cubic-bezier(.22,.61,.36,1); }
+  .proj-card:hover .proj-media img{ transform:scale(1.06); }
+
+  /* primary filled button glow hover */
+  .btn-primary{
+    background:linear-gradient(100deg,#6366f1,#7c3aed);
+    transition:box-shadow .35s ease, transform .2s ease, opacity .2s ease;
+  }
+  .btn-primary:hover{ box-shadow:0 0 0 1px rgba(99,102,241,.4), 0 0 34px 2px rgba(99,102,241,.55); transform:translateY(-2px); }
+  .btn-glass{
+    border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04);
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .btn-glass:hover{ background:rgba(255,255,255,.08); border-color:rgba(99,102,241,.5); transform:translateY(-2px); }
+
+  ::selection{ background:#6366f1; color:#fff; }
+  *{ scrollbar-width:thin; scrollbar-color:#3f4a67 #0B0F17; }
+</style>
+</head>
+<body class="relative min-h-screen antialiased">
+
+<!-- cursor mesh orb -->
+<div id="mesh" aria-hidden="true"></div>
+
+<!-- Navbar -->
+<header class="fixed top-0 inset-x-0 z-50">
+  <nav class="mx-auto max-w-6xl px-5 py-4">
+    <div class="glass-card rounded-2xl px-5 py-3 flex items-center justify-between">
+      <a href="#top" class="font-display text-lg font-700 font-semibold tracking-tight">
+        DJ<span class="text-gradient">ILLALI</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm text-gray-300">
+        <a href="#top" class="hover:text-white transition-colors">Home</a>
+        <a href="#works" class="hover:text-white transition-colors">Projects</a>
+        <a href="#about" class="hover:text-white transition-colors">About</a>
+        <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+      </div>
+      <a href="#contact" class="btn-primary hidden sm:inline-flex items-center gap-2 text-white text-sm font-medium px-4 py-2 rounded-full">
+        Get in Touch
+      </a>
+      <button id="navToggle" class="md:hidden text-gray-200" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+    <!-- mobile menu -->
+    <div id="mobileMenu" class="glass-card md:hidden mt-2 rounded-2xl p-4 hidden">
+      <a href="#top" class="block py-2 hover:text-white">Home</a>
+      <a href="#works" class="block py-2 hover:text-white">Projects</a>
+      <a href="#about" class="block py-2 hover:text-white">About</a>
+      <a href="#contact" class="block py-2 hover:text-white">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section id="top" class="relative pt-36 pb-24 px-5 overflow-hidden">
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="hero-glow" style="width:520px;height:520px;left:-120px;top:0;background:radial-gradient(circle,rgba(99,102,241,.4),transparent 65%)"></div>
+    <div class="hero-glow" style="width:460px;height:460px;right:-100px;top:30%;background:radial-gradient(circle,rgba(34,211,238,.28),transparent 65%)"></div>
+    <div class="hero-glow" style="width:420px;height:420px;left:35%;bottom:-180px;background:radial-gradient(circle,rgba(124,58,237,.25),transparent 65%)"></div>
+  </div>
+
+  <div class="relative z-10 max-w-3xl mx-auto text-center">
+    <div class="pill reveal in text-sm text-gray-300 glass-card rounded-full px-4 py-2 mx-auto w-fit">
+      <span class="relative flex h-2.5 w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+      </span>
+      <span>Available for new projects — open to collaborate</span>
+    </div>
+
+    <h1 class="font-display mt-8 text-5xl sm:text-6xl md:text-7xl font-bold leading-[1.05] tracking-tight reveal">
+      I craft <span class="text-gradient">focused</span><br/>sites that feel alive.
+    </h1>
+
+    <p class="mt-7 text-lg text-gray-300/90 max-w-2xl mx-auto leading-relaxed reveal">
+      Creative web designer blending clean structure, thoughtful motion, and small details
+      across HTML/CSS, JavaScript and modern tools — turning ideas into elegant, responsive experiences.
+    </p>
+
+    <div class="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4 reveal">
+      <a href="#works" class="btn-primary text-white font-medium px-8 py-3.5 rounded-full">Explore Works</a>
+      <a href="#contact" class="btn-glass text-white font-medium px-8 py-3.5 rounded-full">Get in Touch</a>
+    </div>
+
+    <!-- tech stack bar -->
+    <div class="mt-12 flex flex-wrap items-center justify-center gap-3 reveal">
+      <span class="pill text-xs text-gray-400 glass-card rounded-full px-4 py-2">HTML/CSS</span>
+      <span class="pill text-xs text-gray-400 glass-card rounded-full px-4 py-2">JavaScript</span>
+      <span class="pill text-xs text-gray-400 glass-card rounded-full px-4 py-2">Tailwind</span>
+      <span class="pill text-xs text-gray-400 glass-card rounded-full px-4 py-2">React</span>
+      <span class="pill text-xs text-gray-400 glass-card rounded-full px-4 py-2">Python</span>
+      <span class="pill text-xs text-gray-400 glass-card rounded-full px-4 py-2">Math &amp; Analytics</span>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="works" class="relative px-5 py-20">
+  <div class="max-w-6xl mx-auto">
+    <div class="max-w-xl mb-12 reveal">
+      <p class="text-xs uppercase tracking-[.25em] text-accent font-medium">Selected Work</p>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold mt-3">Projects &amp; Experience</h2>
+      <p class="mt-4 text-gray-400">A selection of work where structure, motion and detail come together.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+      <!-- Card 1 -->
+      <a href="index.html" class="proj-card glass-card rounded-3xl overflow-hidden reveal block group">
+        <div class="proj-media aspect-[16/10]">
+          <img src="IMG_0481%20(1).jpeg" alt="Landing page project preview" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="p-6">
+          <h3 class="font-display text-xl font-semibold">Landing Page — Portfolio</h3>
+          <p class="mt-2 text-sm text-gray-400">A focused one-page site with live interactive touches — about, services and honest flat pricing.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">HTML</span>
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">CSS</span>
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">JS</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="index.html" class="proj-card glass-card rounded-3xl overflow-hidden reveal block group">
+        <div class="proj-media aspect-[16/10]">
+          <img src="IMG_5868.jpeg" alt="Interactive experience project preview" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+        <div class="p-6">
+          <h3 class="font-display text-xl font-semibold">Interactive Experience</h3>
+          <p class="mt-2 text-sm text-gray-400">An interface that responds — a real-time water ripple and a live vintage keyboard, all self-contained.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">WebGL</span>
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">Canvas</span>
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">Motion</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="contact.html" class="proj-card glass-card rounded-3xl overflow-hidden reveal block group">
+        <div class="proj-media aspect-[16/10] bg-gradient-to-br from-indigo-500/20 to-cyan-400/10">
+          <div class="w-full h-full grid place-items-center text-5xl font-display text-gradient">CCI</div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-display text-xl font-semibold">Small Business Site</h3>
+          <p class="mt-2 text-sm text-gray-400">A clean single-place presence with easy contact + call-to-action — priced flat and built fast.</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">Responsive</span>
+            <span class="text-xs text-gray-300 glass-card rounded-full px-3 py-1">Static</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="#contact" class="proj-card glass-card rounded-3xl overflow-hidden reveal block group">
+        <div class="proj-media aspect-[16/10] bg-gradient-to-br from-purple-500/20 to-indigo-400/10">
+          <div class="w-full h-full grid place-items-center">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-display text-xl font-semibold">Your Project Next?</h3>
+          <p class="mt-2 text-sm text-gray-400">Let's build something focused and elegant together — flat pricing, honest scope, delivered on time.</p>
+          <div class="mt-4"><span class="text-xs text-accent">Start a conversation →</span></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about" class="relative px-5 py-20">
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+    <div class="reveal">
+      <p class="text-xs uppercase tracking-[.25em] text-accent font-medium">About &amp; Capabilities</p>
+      <h2 class="font-display text-4xl sm:text-5xl font-bold mt-3">Design meets logic.</h2>
+      <p class="mt-6 text-gray-300 leading-relaxed">
+        I'm DJILLALI — a web designer who cares about the small details. Every site I build is
+        responsive, intentional, and built around a single clear goal for the business.
+      </p>
+      <p class="mt-4 text-gray-400 leading-relaxed">
+        Beyond design, I enjoy analytical problem-solving — approaching each layout like a puzzle,
+        cutting complexity until the result is simple, fast and beautiful.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <span class="pill text-sm text-gray-200 glass-card rounded-full px-4 py-2">Creative Design</span>
+        <span class="pill text-sm text-gray-200 glass-card rounded-full px-4 py-2">Analytical Thinking</span>
+        <span class="pill text-sm text-gray-200 glass-card rounded-full px-4 py-2">Responsive Build</span>
+        <span class="pill text-sm text-gray-200 glass-card rounded-full px-4 py-2">Motion &amp; Polish</span>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="glass-card rounded-3xl p-8">
+        <h3 class="font-display text-lg font-semibold mb-6">Technical Skill Set</h3>
+        <div class="space-y-5">
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="text-gray-200">HTML / CSS / Responsive</span><span class="text-accent">95%</span></div>
+            <div class="h-2 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" style="width:95%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="text-gray-200">JavaScript / Interactivity</span><span class="text-accent">85%</span></div>
+            <div class="h-2 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" style="width:85%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="text-gray-200">React / Tailwind</span><span class="text-accent">75%</span></div>
+            <div class="h-2 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" style="width:75%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="text-gray-200">UI / UX &amp; Motion Design</span><span class="text-accent">80%</span></div>
+            <div class="h-2 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" style="width:80%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-2"><span class="text-gray-200">Math / Data &amp; Analytics</span><span class="text-accent">70%</span></div>
+            <div class="h-2 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400" style="width:70%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="relative px-5 py-24">
+  <div class="max-w-3xl mx-auto text-center reveal">
+    <p class="text-xs uppercase tracking-[.25em] text-accent font-medium">Let's connect</p>
+    <h2 class="font-display text-4xl sm:text-5xl font-bold mt-3">Get in touch</h2>
+    <p class="mt-4 text-gray-400">Tell me about your project — I reply fast.</p>
+  </div>
+
+  <div class="max-w-5xl mx-auto mt-12 grid lg:grid-cols-2 gap-6">
+    <form id="contactForm" class="glass-card rounded-3xl p-8 reveal">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <input name="name" type="text" required placeholder="Your name" class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm outline-none focus:border-indigo-500/60 transition-colors" />
+        <input name="email" type="email" required placeholder="Your email" class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm outline-none focus:border-indigo-500/60 transition-colors" />
+      </div>
+      <textarea name="message" rows="5" required placeholder="Tell me about your project..." class="mt-4 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm outline-none focus:border-indigo-500/60 transition-colors resize-none"></textarea>
+      <button type="submit" class="btn-primary mt-5 w-full text-white font-medium px-6 py-3.5 rounded-xl">Send message</button>
+      <p id="formMsg" class="mt-3 text-sm text-emerald-400 hidden">Thanks! Your message has been prepared — opening your email/WhatsApp to send it.</p>
+    </form>
+
+    <div class="reveal">
+      <div class="glass-card rounded-3xl p-8">
+        <h3 class="font-display text-lg font-semibold mb-6">Direct links</h3>
+        <div class="space-y-3">
+          <a href="mailto:bekhaleddjilali0@gmail.com" class="flex items-center gap-3 glass-card rounded-xl px-4 py-3 text-sm hover:border-indigo-500/40 transition-colors">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            bekha....@gmail.com
+          </a>
+          <a href="https://wa.me/213665977002" target="_blank" rel="noopener" class="flex items-center gap-3 glass-card rounded-xl px-4 py-3 text-sm hover:border-indigo-500/40 transition-colors">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#22d3ee"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.1-.7-2.6-1.1-4.3-3.9-4.4-4-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.1.1.3 0 .5l-.4.6-.4.5c-.1.2-.3.3-.1.6.1.3.6 1 1.3 1.7.9.8 1.7 1.1 2 1.2.3.1.4.1.6-.1.2-.2.8-.9 1-1.2.2-.4.4-.3.7-.2.3.1 1.7.8 2 1 .3.2.5.3.5.4.1.1.1.6-.1 1.2Z"/></svg>
+            WhatsApp — 0665 977 002
+          </a>
+          <button id="copyMail" class="w-full flex items-center gap-3 glass-card rounded-xl px-4 py-3 text-sm hover:border-indigo-500/40 transition-colors text-left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            Copy email address
+          </button>
+        </div>
+        <p class="mt-6 text-xs text-gray-500 leading-relaxed">
+          Prefer to skip the form? Message me directly on WhatsApp — I usually reply within the hour.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="relative px-5 py-10 text-center text-sm text-gray-500 border-t border-white/5">
+  <p>© <span id="year"></span> DJILLALI — crafted with care. Available for projects.</p>
+</footer>
+
+<script>
+  // smooth year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // mobile nav toggle
+  var toggle = document.getElementById('navToggle');
+  var menu = document.getElementById('mobileMenu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', function(){ menu.classList.toggle('hidden'); });
+  }
+
+  // cursor mesh orb
+  var mesh = document.getElementById('mesh');
+  var ts = 0, ms = 0, cx = 0, cy = 0, x = 0, y = 0;
+  window.addEventListener('pointermove', function(e){
+    cx = e.clientX; cy = e.clientY;
+    if (!ts) { ts = window.requestAnimationFrame(frame); }
+  });
+  function frame(){
+    x += (cx - x) * 0.12;
+    y += (cy - y) * 0.12;
+    mesh.style.left = x + 'px';
+    mesh.style.top = y + 'px';
+    ts = 0;
+    if (Math.abs(cx - x) > 0.5 || Math.abs(cy - y) > 0.5) {
+      ts = window.requestAnimationFrame(frame);
+    }
+  }
+
+  // reveal on scroll
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  // email copy
+  var copyMail = document.getElementById('copyMail');
+  if (copyMail) {
+    copyMail.addEventListener('click', function(){
+      navigator.clipboard.writeText('bekhaleddjilali0@gmail.com').then(function(){
+        copyMail.lastChild.textContent = '  Email copied!';
+        setTimeout(function(){ copyMail.lastChild.textContent = '  Copy email address'; }, 2000);
+      });
+    });
+  }
+
+  // contact form -> compose mail/WhatsApp
+  var form = document.getElementById('contactForm');
+  var formMsg = document.getElementById('formMsg');
+  if (form) {
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = form.name.value.trim(), email = form.email.value.trim(), msg = form.message.value.trim();
+      var subject = encodeURIComponent('Project inquiry from ' + name);
+      var body = encodeURIComponent('Hi DJILLALI,\n\n' + msg + '\n\n— ' + name + ' (' + email + ')');
+      window.location.href = 'mailto:bekhaleddjilali0@gmail.com?subject=' + subject + '&body=' + body;
+      formMsg.classList.remove('hidden');
+    });
+  }
+</script>
+</body>
+</html>
